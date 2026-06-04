@@ -18,6 +18,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { RevealOnScroll, StaggerChildren } from '../hooks/useScrollReveal';
+import SectionKicker from './SectionKicker';
 
 // ─── Valeurs ────────────────────────────────────────────────────────
 const VALUES = [
@@ -155,10 +156,7 @@ export default function About() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* En-tête de section */}
           <RevealOnScroll className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-50 text-accent-700 text-[11px] font-bold uppercase tracking-wider mb-4">
-              <Target size={11} />
-              Notre mission
-            </div>
+            <SectionKicker icon={Target} label="Notre mission" accent="accent" />
             <h2 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark mb-5 leading-tight">
               Améliorer les conditions de vie par une{' '}
               <span className="text-primary-600">finance utile</span>.
@@ -278,10 +276,7 @@ export default function About() {
       <div className="py-20 lg:py-24 bg-white relative">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 text-primary-600 text-[11px] font-bold uppercase tracking-wider mb-4">
-              <BookOpen size={11} />
-              Notre histoire
-            </div>
+            <SectionKicker icon={BookOpen} label="Notre histoire" accent="primary" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
               <span className="text-gradient-green">Cinquante ans</span> au service du développement.
             </h3>
@@ -364,10 +359,7 @@ export default function About() {
       <div className="py-20 lg:py-24 bg-white relative">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-50 text-accent-700 text-[11px] font-bold uppercase tracking-wider mb-4">
-              <Heart size={11} />
-              Nos valeurs
-            </div>
+            <SectionKicker icon={Heart} label="Nos valeurs" accent="accent" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
               Trois principes qui guident <span className="text-accent-600">chacun de nos actes</span>.
             </h3>
@@ -420,10 +412,7 @@ export default function About() {
       <div className="py-20 lg:py-24 relative">
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 text-primary-600 text-[11px] font-bold uppercase tracking-wider mb-4">
-              <Network size={11} />
-              Notre structure
-            </div>
+            <SectionKicker icon={Network} label="Notre structure" accent="primary" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
               Une <span className="text-primary-600">gouvernance ancrée</span> et claire.
             </h3>
@@ -539,10 +528,7 @@ export default function About() {
       <div className="py-20 lg:py-24 bg-white relative">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 text-primary-600 text-[11px] font-bold uppercase tracking-wider mb-4">
-              <Target size={11} />
-              Axes stratégiques
-            </div>
+            <SectionKicker icon={Target} label="Axes stratégiques" accent="primary" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
               Trois priorités pour <span className="text-primary-600">2024–2028</span>.
             </h3>
@@ -605,10 +591,7 @@ export default function About() {
       <div className="py-20 lg:py-24 relative">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-50 text-accent-700 text-[11px] font-bold uppercase tracking-wider mb-4">
-              <MapPin size={11} />
-              Zones d'intervention
-            </div>
+            <SectionKicker icon={MapPin} label="Zones d'intervention" accent="accent" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
               Présents au cœur des <span className="text-accent-600">communautés</span>.
             </h3>

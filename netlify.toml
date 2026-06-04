@@ -1,0 +1,27 @@
+# Configuration Netlify pour SPA React Router
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Toutes les URLs renvoient vers index.html — React Router gère le routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Cache long sur les assets versionnés
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"

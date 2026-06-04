@@ -1,18 +1,12 @@
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  Download,
   Smartphone,
   Globe,
   Bell,
   Zap,
   Check,
   TrendingUp,
-  User,
-  Building2,
-  PiggyBank,
-  Info,
-  HelpCircle,
 } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
 
@@ -48,152 +42,62 @@ export default function FinacomPlusShowcase() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* ═══════════ GAUCHE : Phone mockup avec notifications ═══════════ */}
+          {/* ═══════════ GAUCHE : 3 phones en cascade avec formes décoratives ═══════════ */}
           <RevealOnScroll direction="left" className="relative">
-            <div className="relative flex items-center justify-center min-h-[600px]">
-              {/* Halo doux derrière le phone */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-500/15 to-accent-500/15 rounded-full blur-3xl scale-75" />
-
-              {/* PHONE MOCKUP */}
+            <div className="relative flex items-center justify-center min-h-[560px]">
+              {/* ─── Formes décoratives en arrière-plan ─── */}
+              {/* Grosse forme dorée top-right */}
               <div
-                className="relative w-[280px] sm:w-[320px] lg:w-[300px] xl:w-[340px]"
-                style={{
-                  filter: 'drop-shadow(0 30px 60px rgba(10,38,21,0.25))',
-                  animation: 'cardFloat 8s ease-in-out infinite',
-                }}
-              >
-                {/* Phone frame (notched) */}
-                <div className="relative aspect-[9/19] rounded-[2.5rem] bg-gradient-to-br from-gray-900 via-gray-800 to-black p-2 border border-gray-700">
-                  {/* Screen */}
-                  <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-white">
-                    {/* Notch / status bar */}
-                    <div className="relative h-7 bg-white flex items-center justify-between px-6 pt-2 text-[10px] text-gray-700">
-                      <span className="font-bold tabular-nums">15:53</span>
-                      <div className="flex items-center gap-1">
-                        <span className="w-3 h-2 rounded-sm bg-gray-700" />
-                        <span className="w-3 h-2 rounded-sm bg-gray-700" />
-                      </div>
-                    </div>
+                className="absolute -top-12 -right-8 w-64 h-64 bg-accent-500/30 rounded-full blur-2xl"
+                aria-hidden="true"
+              />
+              {/* Grosse forme verte right */}
+              <div
+                className="absolute top-1/2 -right-12 w-80 h-80 bg-primary-500/25 rounded-[40%] blur-2xl -translate-y-1/2"
+                aria-hidden="true"
+              />
+              {/* Petit cercle doré top-left */}
+              <div
+                className="absolute top-12 left-0 w-20 h-20 rounded-full bg-accent-400/60"
+                aria-hidden="true"
+              />
+              {/* Petit cercle vert bottom-left */}
+              <div
+                className="absolute bottom-12 left-8 w-12 h-12 rounded-full bg-primary-500/70"
+                aria-hidden="true"
+              />
 
-                    {/* App content — réplique FINACOM+ */}
-                    <div className="relative h-[calc(100%-1.75rem)] overflow-hidden">
-                      {/* Header gradient */}
-                      <div
-                        className="relative px-5 pt-5 pb-8"
-                        style={{
-                          background:
-                            'radial-gradient(circle at 80% 0%, #fef3c7 0%, #f0fdf4 50%, #ffffff 100%)',
-                        }}
-                      >
-                        {/* Logo FINACOM */}
-                        <div className="mb-4">
-                          <img
-                            src="/logo-finacom.png"
-                            alt=""
-                            className="h-7 w-auto"
-                            onError={(e) => (e.currentTarget.style.display = 'none')}
-                          />
-                        </div>
+              {/* ─── 3 phones en cascade ─── */}
+              <div className="relative flex items-center justify-center gap-2 sm:gap-3 lg:gap-4">
+                {/* Phone GAUCHE — décalé bas, plus petit */}
+                <PhoneMockup
+                  width="w-[130px] sm:w-[150px] lg:w-[160px]"
+                  translateY="translate-y-10"
+                  objectPosition="top"
+                  shadowIntensity={0.18}
+                />
 
-                        {/* Titre */}
-                        <h3 className="text-[20px] font-extrabold text-primary-900 leading-tight mb-1">
-                          Bienvenue 👋
-                        </h3>
-                        <p className="text-[11px] text-gray-500 mb-5">
-                          Accédez à vos comptes
-                        </p>
+                {/* Phone CENTRE — principal, plus grand */}
+                <PhoneMockup
+                  width="w-[170px] sm:w-[200px] lg:w-[220px]"
+                  translateY=""
+                  objectPosition="center"
+                  shadowIntensity={0.3}
+                  emphasized
+                />
 
-                        {/* Carte compte principal */}
-                        <div className="bg-white rounded-2xl p-4 shadow-[0_8px_30px_rgba(27,122,61,0.15)] border border-primary-50">
-                          <div className="flex items-start justify-between mb-2">
-                            <div>
-                              <div className="text-[14px] font-extrabold text-primary-700">
-                                Compte principal
-                              </div>
-                              <div className="text-[11px] text-gray-500 font-mono mt-0.5">
-                                TYRTYE-7474764
-                              </div>
-                            </div>
-                            <span className="px-2.5 py-1 rounded-full bg-accent-500 text-white text-[9px] font-bold">
-                              Courant
-                            </span>
-                          </div>
-                          <button className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary-200 text-primary-700 text-[10px] font-semibold">
-                            <span>📋</span> Voir mes relevés
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Quick actions */}
-                      <div className="px-5 -mt-3 mb-5">
-                        <div className="grid grid-cols-3 gap-2">
-                          {[
-                            { icon: User, label: 'Gestionnaire' },
-                            { icon: User, label: 'Mon profil' },
-                            { icon: Building2, label: 'Agences' },
-                          ].map((q, i) => (
-                            <div
-                              key={i}
-                              className="aspect-square rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex flex-col items-center justify-center gap-1 shadow-md"
-                            >
-                              <q.icon size={18} className="text-white" />
-                              <div className="text-[9px] text-white font-medium">
-                                {q.label}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Section Explorer */}
-                      <div className="px-5">
-                        <div className="text-[14px] font-extrabold text-primary-900 mb-3">
-                          Explorer
-                        </div>
-                        <div className="space-y-2">
-                          {[
-                            {
-                              icon: Info,
-                              title: 'À propos',
-                              desc: 'Découvrez notre mission et notre histoire',
-                            },
-                            {
-                              icon: HelpCircle,
-                              title: 'FAQ',
-                              desc: 'Questions fréquentes et support',
-                            },
-                          ].map((row, i) => (
-                            <div
-                              key={i}
-                              className="flex items-center gap-3 p-2.5 rounded-xl bg-gray-50"
-                            >
-                              <div className="w-8 h-8 rounded-full bg-accent-100 flex items-center justify-center">
-                                <row.icon size={14} className="text-accent-700" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="text-[11px] font-bold text-primary-900 leading-tight">
-                                  {row.title}
-                                </div>
-                                <div className="text-[9px] text-gray-500 leading-tight">
-                                  {row.desc}
-                                </div>
-                              </div>
-                              <span className="text-gray-300">›</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Notch (top) */}
-                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-5 bg-black rounded-full z-10" />
+                {/* Phone DROITE — décalé bas, plus petit */}
+                <PhoneMockup
+                  width="w-[130px] sm:w-[150px] lg:w-[160px]"
+                  translateY="translate-y-10"
+                  objectPosition="bottom"
+                  shadowIntensity={0.18}
+                />
               </div>
 
-              {/* Notification flottante 1 — "Virement reçu" */}
+              {/* ─── Notification flottante "Virement reçu" ─── */}
               <div
-                className="absolute top-[15%] -left-2 sm:-left-8 z-20 bg-white rounded-xl shadow-2xl shadow-primary-900/15 border border-gray-100 p-3 flex items-center gap-3 max-w-[180px]"
+                className="absolute top-[12%] left-0 sm:-left-4 z-30 bg-white rounded-xl shadow-2xl shadow-primary-900/15 border border-gray-100 p-3 flex items-center gap-3 max-w-[180px]"
                 style={{ animation: 'cardFloat 7s ease-in-out -2s infinite' }}
               >
                 <div className="w-9 h-9 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
@@ -209,9 +113,9 @@ export default function FinacomPlusShowcase() {
                 </div>
               </div>
 
-              {/* Notification flottante 2 — "Alerte SMS" */}
+              {/* ─── Notification flottante "Alerte SMS" ─── */}
               <div
-                className="absolute bottom-[20%] -right-2 sm:-right-8 z-20 bg-white rounded-xl shadow-2xl shadow-primary-900/15 border border-gray-100 p-3 flex items-center gap-3"
+                className="absolute bottom-[10%] right-0 sm:-right-4 z-30 bg-white rounded-xl shadow-2xl shadow-primary-900/15 border border-gray-100 p-3 flex items-center gap-3"
                 style={{ animation: 'cardFloat 7s ease-in-out -4s infinite' }}
               >
                 <div className="w-9 h-9 rounded-full bg-accent-50 flex items-center justify-center flex-shrink-0">
@@ -224,24 +128,6 @@ export default function FinacomPlusShowcase() {
                   <div className="text-sm font-extrabold text-dark">Activé</div>
                 </div>
               </div>
-
-              {/* Notification flottante 3 — "Solde" */}
-              <div
-                className="absolute top-[55%] -left-4 sm:-left-12 z-20 bg-primary-700 text-white rounded-xl shadow-2xl shadow-primary-900/20 p-3 flex items-center gap-3"
-                style={{ animation: 'cardFloat 8s ease-in-out -1s infinite' }}
-              >
-                <div className="w-9 h-9 rounded-full bg-accent-500 flex items-center justify-center flex-shrink-0">
-                  <TrendingUp size={15} className="text-primary-900" />
-                </div>
-                <div>
-                  <div className="text-[10px] text-white/70 leading-none mb-1">
-                    Épargne · ce mois
-                  </div>
-                  <div className="text-sm font-extrabold text-accent-400 tabular-nums">
-                    +12,8 %
-                  </div>
-                </div>
-              </div>
             </div>
           </RevealOnScroll>
 
@@ -249,10 +135,11 @@ export default function FinacomPlusShowcase() {
           <div>
             <RevealOnScroll>
               {/* Kicker */}
-              <div className="inline-flex items-center gap-2 mb-5">
-                <span className="text-accent-600 text-[11px] uppercase tracking-[0.25em] font-extrabold">
-                  100% Digital
-                </span>
+              <div
+                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-accent-100 shadow-sm text-accent-700 text-[13px] font-extrabold uppercase tracking-[0.18em] mb-6 animate-kicker"
+              >
+                <Zap size={15} />
+                100% Digital
               </div>
 
               {/* Titre */}
@@ -313,15 +200,77 @@ export default function FinacomPlusShowcase() {
               </Link>
               <a
                 href="#contact"
-                className="group inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border-2 border-gray-200 hover:border-primary-300 hover:bg-primary-50 text-dark font-semibold text-sm transition-all duration-300"
+                aria-label="Télécharger sur Google Play"
+                className="group inline-flex items-center justify-center gap-3 px-5 py-3 rounded-xl bg-black hover:bg-gray-900 border border-gray-300 hover:border-gray-400 text-white transition-all duration-300 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
               >
-                <Download size={16} className="text-primary-700" />
-                <span>Télécharger l'app</span>
+                {/* Logo Google Play — SVG officiel Material Design */}
+                <svg
+                  viewBox="0 0 512 512"
+                  className="w-8 h-8 flex-shrink-0"
+                  aria-hidden="true"
+                >
+                  <path fill="#34A853" d="M64 32v448l216-224z" />
+                  <path fill="#4285F4" d="M64 32l216 224 80-83z" />
+                  <path fill="#FBBC04" d="M280 256l80 83 88-91-88-91z" />
+                  <path fill="#EA4335" d="M64 480l216-224 80 83z" />
+                </svg>
+
+                <div className="flex flex-col text-left leading-none">
+                  <span className="text-[10px] uppercase tracking-wider font-medium text-white/80">
+                    GET IT ON
+                  </span>
+                  <span className="text-lg font-semibold text-white -mt-0.5">
+                    Google Play
+                  </span>
+                </div>
               </a>
             </RevealOnScroll>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Sous-composant — Mockup phone réutilisable
+// ═══════════════════════════════════════════════════════════════════
+function PhoneMockup({ width, translateY, objectPosition, shadowIntensity = 0.25, emphasized = false }) {
+  const notchSize = emphasized ? 'w-14 h-3.5' : 'w-10 h-2.5';
+  return (
+    <div
+      className={`relative ${width} ${translateY} flex-shrink-0`}
+      style={{
+        filter: `drop-shadow(0 30px 60px rgba(10,38,21,${shadowIntensity}))`,
+        zIndex: emphasized ? 20 : 10,
+      }}
+    >
+      {/* Phone frame */}
+      <div className="relative aspect-[9/19] rounded-[2rem] bg-gradient-to-br from-gray-900 via-gray-800 to-black p-1.5 border border-gray-700">
+        <div className="relative w-full h-full rounded-[1.6rem] overflow-hidden bg-white">
+          {/* Fallback gradient */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(circle at 80% 0%, #fef3c7 0%, #f0fdf4 50%, #ffffff 100%)',
+            }}
+          />
+          <img
+            src="/ecran1.jpeg"
+            alt="FINACOM+ application mobile"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition }}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        </div>
+      </div>
+      {/* Notch */}
+      <div
+        className={`absolute top-2 left-1/2 -translate-x-1/2 ${notchSize} bg-black rounded-full z-10`}
+      />
+    </div>
   );
 }

@@ -13,7 +13,7 @@ export default function ContactPage() {
         highlight="près de chez vous"
         description="Retrouvez-nous dans nos 8 agences entièrement interconnectées — à Ouagadougou et à Koudougou — pour effectuer vos opérations partout dans le réseau."
         breadcrumb="Contact"
-        imageUrl="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2000&q=80"
+        imageUrl="https://images.unsplash.com/photo-1739303987861-1b0c1104b747?auto=format&fit=crop&w=2000&q=80"
       />
       <Contact />
       <Footer />

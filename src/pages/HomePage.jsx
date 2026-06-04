@@ -8,6 +8,7 @@ import HeroMini from '../components/HeroMini';
 import HeroFullBleed from '../components/HeroFullBleed';
 import Services from '../components/Services';
 import ServicesPreview from '../components/ServicesPreview';
+import FinacomPlusShowcase from '../components/FinacomPlusShowcase';
 import About from '../components/About';
 import AboutPreview from '../components/AboutPreview';
 import Testimonials from '../components/Testimonials';
@@ -28,6 +29,7 @@ export default function HomePage() {
       <HeroFullBleed />
       <AboutPreview />
       <ServicesPreview />
+      <FinacomPlusShowcase />
       <Testimonials />
       <QuickAccess />
       <CTABanner />

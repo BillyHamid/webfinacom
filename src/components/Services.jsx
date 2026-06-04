@@ -35,59 +35,7 @@ import {
   Minus,
 } from 'lucide-react';
 import { RevealOnScroll, StaggerChildren } from '../hooks/useScrollReveal';
-
-// ─── PRODUITS PHARES (6 services digitaux à mettre en avant) ────────
-// Interprétations à vérifier — corriger si besoin
-const FEATURED_PRODUCTS = [
-  {
-    badge: 'App mobile',
-    name: 'FINACOM+',
-    tagline: "Votre banque dans la poche",
-    desc: "L'application FINACOM pour consulter vos comptes, faire vos virements et piloter votre épargne depuis votre téléphone.",
-    icon: Smartphone,
-    accent: 'from-primary-500 to-primary-700',
-  },
-  {
-    badge: 'Collecte de proximité',
-    name: 'DCOLLECT',
-    tagline: 'La collecte décentralisée',
-    desc: "Notre service de collecte d'épargne au plus près de vous, via nos agents de proximité dans les marchés, quartiers et villages.",
-    icon: HandCoins,
-    accent: 'from-accent-500 to-accent-700',
-  },
-  {
-    badge: 'Transfert instantané',
-    name: 'BANK TO WALLET',
-    tagline: 'De votre compte à votre mobile',
-    desc: "Transférez en quelques secondes l'argent de votre compte FINACOM vers votre portefeuille Orange Money ou Coris Money.",
-    icon: Repeat,
-    accent: 'from-blue-500 to-blue-700',
-  },
-  {
-    badge: 'Interopérabilité UEMOA',
-    name: 'PI-SPI',
-    tagline: 'Paiement instantané UEMOA',
-    desc: "Recevez et envoyez des paiements instantanés vers toute banque de la zone UEMOA via le système SPI.",
-    icon: Zap,
-    accent: 'from-purple-500 to-purple-700',
-  },
-  {
-    badge: 'Sans internet',
-    name: 'SMS Banking',
-    tagline: 'Vos comptes par SMS',
-    desc: "Consultez votre solde, recevez vos relevés et confirmez vos opérations par simple SMS — partout, sans connexion internet.",
-    icon: MessageSquare,
-    accent: 'from-emerald-500 to-emerald-700',
-  },
-  {
-    badge: 'Carte prépayée',
-    name: 'africards',
-    tagline: 'La carte africaine prépayée',
-    desc: "Rechargez et payez vos achats en magasin et en ligne, partout en Afrique de l'Ouest avec votre carte africards FINACOM.",
-    icon: CreditCard,
-    accent: 'from-rose-500 to-rose-700',
-  },
-];
+import SectionKicker from './SectionKicker';
 
 // ─── TAXONOMIE COMPLÈTE — 4 catégories produits & services ──────────
 const CATEGORIES = [
@@ -313,10 +261,7 @@ export default function Services() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ═══════════ HEADER ═══════════ */}
         <RevealOnScroll className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-50 text-primary-600 text-xs font-semibold mb-5 uppercase tracking-[0.15em]">
-            <Zap size={12} />
-            Nos produits et services
-          </div>
+          <SectionKicker icon={Zap} label="Nos produits et services" accent="primary" />
           <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
             Une offre complète, <span className="text-gradient-green">au service de vos projets</span>.
           </h2>
@@ -325,96 +270,6 @@ export default function Services() {
             pensées pour répondre à tous les besoins financiers — du particulier à l'entreprise.
           </p>
         </RevealOnScroll>
-
-        {/* ═══════════ SECTION PRODUITS PHARES ═══════════ */}
-        <RevealOnScroll className="mb-24">
-          {/* Bandeau d'intro phares */}
-          <div className="flex items-end justify-between gap-6 mb-8 pb-6 border-b border-gray-100">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-50 text-accent-700 text-[11px] font-bold uppercase tracking-wider mb-3">
-                <Star size={11} fill="currentColor" />
-                Nos produits phares
-              </div>
-              <h3 className="text-2xl lg:text-3xl font-extrabold text-dark leading-tight">
-                6 services digitaux pour <span className="text-accent-600">moderniser votre rapport à l'argent</span>.
-              </h3>
-            </div>
-            <a
-              href="#contact"
-              className="hidden sm:inline-flex items-center gap-1.5 text-primary-600 hover:text-primary-700 text-sm font-semibold transition-colors whitespace-nowrap"
-            >
-              Découvrir tous nos services
-              <ArrowUpRight size={14} />
-            </a>
-          </div>
-
-          {/* Grille des 6 produits phares */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {FEATURED_PRODUCTS.map((p, i) => {
-              const Icon = p.icon;
-              return (
-                <div
-                  key={p.name}
-                  className="group relative rounded-2xl bg-white border border-gray-100 overflow-hidden hover:border-transparent hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
-                >
-                  {/* Halo gradient au hover */}
-                  <div
-                    className={`absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br ${p.accent} opacity-0 group-hover:opacity-20 blur-3xl transition-opacity duration-500`}
-                  />
-
-                  {/* Top accent bar */}
-                  <div
-                    className={`h-1 w-full bg-gradient-to-r ${p.accent} opacity-50 group-hover:opacity-100 transition-opacity duration-300`}
-                  />
-
-                  <div className="relative p-6">
-                    <div className="flex items-start justify-between mb-5">
-                      <div
-                        className={`w-12 h-12 rounded-xl bg-gradient-to-br ${p.accent} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                      >
-                        <Icon size={22} className="text-white" />
-                      </div>
-                      <span className="text-[9px] uppercase tracking-[0.15em] font-bold text-gray-400">
-                        {p.badge}
-                      </span>
-                    </div>
-
-                    <h4 className="text-xl font-extrabold text-dark mb-1 tracking-tight">
-                      {p.name}
-                    </h4>
-                    <p className="text-[13px] font-semibold text-gray-500 mb-3 italic">
-                      {p.tagline}
-                    </p>
-                    <p className="text-sm text-gray-500 leading-relaxed mb-5">
-                      {p.desc}
-                    </p>
-
-                    <a
-                      href="#contact"
-                      className="inline-flex items-center gap-1.5 text-sm font-bold text-dark group-hover:text-primary-600 transition-colors"
-                    >
-                      En savoir plus
-                      <ArrowUpRight
-                        size={14}
-                        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                      />
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </RevealOnScroll>
-
-        {/* ═══════════ DIVIDER ═══════════ */}
-        <div className="flex items-center gap-4 mb-12">
-          <div className="h-px bg-gray-200 flex-1" />
-          <span className="text-gray-400 text-[11px] uppercase tracking-[0.25em] font-bold flex items-center gap-2">
-            <Sparkles size={12} className="text-accent-500" />
-            Notre offre complète
-          </span>
-          <div className="h-px bg-gray-200 flex-1" />
-        </div>
 
         {/* ═══════════ ONGLETS DE CATÉGORIES ═══════════ */}
         <RevealOnScroll className="mb-12">
@@ -562,19 +417,9 @@ export default function Services() {
         <ProcessSection />
 
         {/* ═══════════════════════════════════════════════════════════════ */}
-        {/* SECTION SUPPLÉMENTAIRE — STATS PAR FAMILLE (Dashboard-style)    */}
-        {/* ═══════════════════════════════════════════════════════════════ */}
-        <CategoryStats />
-
-        {/* ═══════════════════════════════════════════════════════════════ */}
         {/* SECTION SUPPLÉMENTAIRE — FAQ ACCORDION                          */}
         {/* ═══════════════════════════════════════════════════════════════ */}
         <FAQSection />
-
-        {/* ═══════════════════════════════════════════════════════════════ */}
-        {/* SECTION SUPPLÉMENTAIRE — CTA FINAL                              */}
-        {/* ═══════════════════════════════════════════════════════════════ */}
-        <FinalCTA />
       </div>
     </section>
   );
@@ -615,10 +460,7 @@ function ProcessSection() {
   return (
     <div className="py-20 lg:py-24 border-t border-gray-100 mt-16">
       <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold uppercase tracking-wider mb-4">
-          <Clock size={11} />
-          Comment ça marche
-        </div>
+        <SectionKicker icon={Clock} label="Comment ça marche" accent="blue" />
         <h3 className="text-3xl lg:text-[2.25rem] font-extrabold text-dark leading-tight">
           Souscrire à un produit FINACOM, <span className="text-primary-600">en 4 étapes</span>.
         </h3>
@@ -664,89 +506,6 @@ function ProcessSection() {
   );
 }
 
-const CATEGORY_KPIS = [
-  {
-    label: "Produits d'épargne",
-    metric: '4',
-    sub: 'formules adaptées',
-    detail: "DAV · DAT · Daar daré · Dépôts spécifiques",
-    color: 'primary',
-  },
-  {
-    label: 'Produits de crédit',
-    metric: '4',
-    sub: 'types de financement',
-    detail: 'Commercial · Salariés · Agricole · Communautaire',
-    color: 'accent',
-  },
-  {
-    label: 'Services digitaux',
-    metric: '9',
-    sub: 'solutions en ligne',
-    detail: "Dont 6 phares : FINACOM+, DCOLLECT, PI-SPI…",
-    color: 'blue',
-  },
-  {
-    label: 'Services rattachés',
-    metric: '6',
-    sub: "services complémentaires",
-    detail: 'Virements · Attestations · Engagements signés',
-    color: 'emerald',
-  },
-];
-
-function CategoryStats() {
-  return (
-    <div className="py-20 lg:py-24 border-t border-gray-100">
-      <RevealOnScroll className="text-center max-w-2xl mx-auto mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold uppercase tracking-wider mb-4">
-          <Sparkles size={11} />
-          Vue d'ensemble
-        </div>
-        <h3 className="text-3xl lg:text-[2.25rem] font-extrabold text-dark leading-tight">
-          <span className="text-gradient-green">23 produits & services</span> à votre disposition.
-        </h3>
-      </RevealOnScroll>
-
-      <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5" stagger={100}>
-        {CATEGORY_KPIS.map((kpi) => {
-          const colorClasses = {
-            primary: 'from-primary-500 to-primary-700 text-primary-700 bg-primary-50',
-            accent: 'from-accent-500 to-accent-700 text-accent-700 bg-accent-50',
-            blue: 'from-blue-500 to-blue-700 text-blue-700 bg-blue-50',
-            emerald: 'from-emerald-500 to-emerald-700 text-emerald-700 bg-emerald-50',
-          };
-          const c = colorClasses[kpi.color];
-          const [gradient, textColor, bgColor] = c.split(' ').slice(0, 4).join(' ').match(/^(\S+\s\S+\s\S+)\s(\S+)\s(\S+)$/) || [];
-
-          return (
-            <div
-              key={kpi.label}
-              className="relative rounded-2xl bg-white border border-gray-100 p-6 overflow-hidden hover:shadow-lg transition-all duration-300"
-            >
-              {/* Bandeau coloré gauche */}
-              <div
-                className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${c.split(' ')[0]} ${c.split(' ')[1]}`}
-              />
-
-              <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400 mb-2">
-                {kpi.label}
-              </div>
-              <div className={`text-5xl font-extrabold tabular-nums leading-none mb-2 ${c.split(' ')[2]}`}>
-                {kpi.metric}
-              </div>
-              <div className="text-sm font-bold text-dark mb-3">{kpi.sub}</div>
-              <div className="text-xs text-gray-500 leading-relaxed pt-3 border-t border-gray-100">
-                {kpi.detail}
-              </div>
-            </div>
-          );
-        })}
-      </StaggerChildren>
-    </div>
-  );
-}
-
 const FAQ_ITEMS = [
   {
     q: 'Quels documents pour ouvrir un compte ?',
@@ -777,10 +536,7 @@ function FAQSection() {
     <div className="py-20 lg:py-24 border-t border-gray-100">
       <div className="max-w-4xl mx-auto">
         <RevealOnScroll className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-50 text-accent-700 text-[11px] font-bold uppercase tracking-wider mb-4">
-            <HelpCircle size={11} />
-            Questions fréquentes
-          </div>
+          <SectionKicker icon={HelpCircle} label="Questions fréquentes" accent="accent" />
           <h3 className="text-3xl lg:text-[2.25rem] font-extrabold text-dark leading-tight">
             Tout ce qu'il faut savoir, <span className="text-accent-600">simplement</span>.
           </h3>
@@ -834,47 +590,3 @@ function FAQSection() {
   );
 }
 
-function FinalCTA() {
-  return (
-    <div className="py-20 lg:py-24 border-t border-gray-100">
-      <RevealOnScroll>
-        <div className="relative rounded-3xl bg-gradient-to-br from-primary-700 via-primary-800 to-primary-900 p-10 lg:p-14 text-center overflow-hidden">
-          {/* Décor */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-accent-500/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-500/15 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative">
-            <Award size={42} className="text-accent-400 mx-auto mb-6" />
-            <h3 className="text-2xl lg:text-4xl font-extrabold text-white mb-4 leading-tight max-w-2xl mx-auto">
-              Prêt à faire grandir votre projet avec FINACOM ?
-            </h3>
-            <p className="text-white/70 leading-relaxed mb-8 max-w-2xl mx-auto">
-              Nos conseillers vous accompagnent pour trouver la solution
-              parfaitement adaptée à votre situation — particulier, professionnel
-              ou entreprise.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a
-                href="/contact"
-                className="group inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-accent-500 hover:bg-accent-400 text-primary-900 font-bold text-sm transition-all duration-300 shadow-2xl shadow-accent-500/30 hover:shadow-accent-500/50 hover:-translate-y-0.5"
-              >
-                Ouvrir un compte
-                <ArrowRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </a>
-              <a
-                href="/contact"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-lg border border-white/30 hover:border-white/60 hover:bg-white/5 text-white font-semibold text-sm transition-all duration-300 backdrop-blur-sm"
-              >
-                <MessageSquare size={16} />
-                Parler à un conseiller
-              </a>
-            </div>
-          </div>
-        </div>
-      </RevealOnScroll>
-    </div>
-  );
-}

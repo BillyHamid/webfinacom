@@ -11,8 +11,9 @@ import {
   Zap,
 } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
+import SectionKicker from './SectionKicker';
 
-// 4 familles avec photos thématiques en background
+// 4 familles avec photos thématiques en lien direct avec les offres
 const CATEGORIES = [
   {
     icon: PiggyBank,
@@ -20,7 +21,9 @@ const CATEGORIES = [
     name: "Produits d'épargne",
     count: 4,
     examples: 'DAV · DAT · Daar daré',
-    image: '/hero-about.jpg',
+    // Bocal de pièces avec plante = épargne qui fructifie
+    image:
+      'https://images.unsplash.com/photo-1633158829875-e5316a358c6f?auto=format&fit=crop&w=1000&q=80',
     accent: 'primary',
     accentRgb: 'rgba(27,122,61,',
   },
@@ -30,7 +33,9 @@ const CATEGORIES = [
     name: 'Produits de crédit',
     count: 4,
     examples: 'Commercial · Agricole · Salariés',
-    image: '/hero-services.jpg',
+    // Femme africaine récoltant dans un champ = crédit agricole / Malawi
+    image:
+      'https://images.unsplash.com/photo-1746014929708-fcb859fd3185?auto=format&fit=crop&w=1000&q=80',
     accent: 'accent',
     accentRgb: 'rgba(212,160,23,',
   },
@@ -40,8 +45,9 @@ const CATEGORIES = [
     name: 'Services digitaux',
     count: 9,
     examples: 'FINACOM+ · DCOLLECT · BANK TO WALLET',
+    // Smartphone tenu en main = mobile banking
     image:
-      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=1000&q=80',
     accent: 'blue',
     accentRgb: 'rgba(37,99,235,',
     featured: true,
@@ -52,8 +58,9 @@ const CATEGORIES = [
     name: 'Services rattachés',
     count: 6,
     examples: 'Virements · Attestations · Cautions',
+    // Échange client-conseiller au guichet = services en agence
     image:
-      'https://images.unsplash.com/photo-1556745757-8d76bdb6984b?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=80',
     accent: 'emerald',
     accentRgb: 'rgba(16,185,129,',
   },
@@ -79,18 +86,11 @@ export default function ServicesPreview() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ═══════════ HEADER ═══════════ */}
         <RevealOnScroll className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-50 text-primary-600 text-xs font-bold mb-5 uppercase tracking-[0.15em]">
-            <Zap size={12} />
-            Nos produits et services
-          </div>
+          <SectionKicker icon={Zap} label="Nos produits et services" accent="primary" />
           <h2 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
             Une offre structurée en{' '}
             <span className="text-gradient-green">4 familles</span>.
           </h2>
-          <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
-            De l'épargne quotidienne au crédit communautaire, en passant par
-            nos services digitaux phares — FINACOM couvre tous vos besoins financiers.
-          </p>
         </RevealOnScroll>
 
         {/* ═══════════ 4 CARDS PHOTO BG (style page Services) ═══════════ */}

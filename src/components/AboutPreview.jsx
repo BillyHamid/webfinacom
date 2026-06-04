@@ -8,6 +8,7 @@ import {
   Quote,
 } from 'lucide-react';
 import { RevealOnScroll, StaggerChildren } from '../hooks/useScrollReveal';
+import SectionKicker from './SectionKicker';
 
 // Aperçu compact des valeurs (3 chips)
 const VALUES = [
@@ -38,12 +39,12 @@ export default function AboutPreview() {
               {/* Halo doux */}
               <div className="absolute -inset-4 bg-gradient-to-br from-primary-500/15 to-accent-500/15 rounded-[2rem] blur-3xl" />
 
-              {/* Photo */}
+              {/* Photo — paysans africains joyeux */}
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl shadow-primary-900/15 ring-1 ring-white">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-accent-100" />
                 <img
-                  src="/hero-about.jpg"
-                  alt="FINACOM accompagne les communautés burkinabè"
+                  src="https://media.istockphoto.com/id/1478140327/photo/portrait-of-a-man-in-the-countryside-harvesting-fruit-spondias-siriguela-seriguela-ciriguela.jpg?s=2048x2048&w=is&k=20&c=0kqqlXC27iSoq7U6kSeFH7SDC7-SZBjz9mZ2YesvmAU="
+                  alt="FINACOM accompagne avec joie les paysans burkinabè"
                   className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => (e.currentTarget.style.display = 'none')}
                 />
@@ -74,9 +75,7 @@ export default function AboutPreview() {
           {/* ─── Droite : contenu condensé ─── */}
           <div className="lg:col-span-7">
             <RevealOnScroll>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 text-primary-700 text-[11px] font-bold uppercase tracking-[0.18em] mb-5">
-                <Sparkles size={11} />À propos de FINACOM
-              </div>
+              <SectionKicker icon={Sparkles} label="À propos de FINACOM" accent="primary" />
               <h2 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
                 Une finance{' '}
                 <span className="text-gradient-green">proche, moderne</span> et durable.

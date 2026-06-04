@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { ChevronRight, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -22,9 +23,17 @@ export default function MiniHero({
   imageUrl,
   children,
 }) {
+  const [zoomed, setZoomed] = useState(false);
+
+  // Déclenche le Ken Burns au montage
+  useEffect(() => {
+    const t = setTimeout(() => setZoomed(true), 100);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-24 bg-primary-900 overflow-hidden">
-      {/* ── Photo de fond (si fournie) ── */}
+    <section className="relative pt-36 lg:pt-44 pb-24 lg:pb-32 bg-primary-900 overflow-hidden min-h-[420px] lg:min-h-[520px]">
+      {/* ── Photo de fond (si fournie) avec Ken Burns ── */}
       {imageUrl && (
         <div className="absolute inset-0">
           <img
@@ -33,6 +42,10 @@ export default function MiniHero({
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
             loading="eager"
+            style={{
+              transform: zoomed ? 'scale(1.12)' : 'scale(1)',
+              transition: 'transform 18000ms cubic-bezier(0.22, 1, 0.36, 1)',
+            }}
             onError={(e) => {
               e.currentTarget.style.display = 'none';
             }}

@@ -150,6 +150,24 @@
   animation: fadeInUp 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* ─── Animation des kickers de section ─── */
+@keyframes kickerEntry {
+  0%   { opacity: 0; transform: scale(0.6) translateY(-10px); }
+  60%  { opacity: 1; transform: scale(1.08) translateY(0); }
+  100% { transform: scale(1); }
+}
+
+@keyframes kickerGlow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(27, 122, 61, 0.08); }
+  50%      { box-shadow: 0 8px 30px rgba(212, 160, 23, 0.22); }
+}
+
+.animate-kicker {
+  animation:
+    kickerEntry 800ms cubic-bezier(0.34, 1.56, 0.64, 1) both,
+    kickerGlow 4s ease-in-out 1.2s infinite;
+}
+
 .animate-float {
   animation: float 4s cubic-bezier(0.37, 0, 0.63, 1) infinite;
 }
