@@ -1,18 +1,15 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// Public site
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Partners from './components/Partners';
-import Services from './components/Services';
-import About from './components/About';
-import Metrics from './components/Metrics';
-import Testimonials from './components/Testimonials';
-import News from './components/News';
-import Events from './components/Events';
-import QuickAccess from './components/QuickAccess';
-import CTABanner from './components/CTABanner';
-import Footer from './components/Footer';
+// Pages publiques
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import ServicesPage from './pages/ServicesPage';
+import BlogPage from './pages/BlogPage';
+import MediaPage from './pages/MediaPage';
+import ContactPage from './pages/ContactPage';
+
+// Utilitaires
+import ScrollToTop from './components/ScrollToTop';
 
 // Admin CMS
 import AdminLayout from './admin/AdminLayout';
@@ -23,34 +20,28 @@ import EventsManager from './admin/pages/EventsManager';
 import SettingsPage from './admin/pages/SettingsPage';
 import { DataProvider } from './admin/context/DataContext';
 
-function HomePage() {
-  return (
-    <div className="min-h-screen bg-white antialiased">
-      <Navbar />
-      <Hero />
-      <Partners />
-      <Services />
-      <About />
-      <Metrics />
-      <Testimonials />
-      <News />
-      <Events />
-      <QuickAccess />
-      <CTABanner />
-      <Footer />
-    </div>
-  );
-}
-
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
-        {/* Public website */}
+        {/* Site public — une page par rubrique */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/a-propos" element={<AboutPage />} />
+        <Route path="/produits-et-services" element={<ServicesPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/mediatheque" element={<MediaPage />} />
+        <Route path="/contact" element={<ContactPage />} />
 
         {/* Admin CMS */}
-        <Route path="/admin" element={<DataProvider><AdminLayout /></DataProvider>}>
+        <Route
+          path="/admin"
+          element={
+            <DataProvider>
+              <AdminLayout />
+            </DataProvider>
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="pages" element={<PagesManager />} />
           <Route path="news" element={<NewsManager />} />

@@ -49,7 +49,7 @@ export default function Footer() {
   const [email, setEmail] = useState('');
 
   return (
-    <footer id="contact" className="bg-dark text-white relative overflow-hidden">
+    <footer className="bg-dark text-white relative overflow-hidden">
       {/* Subtle top gradient */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/30 to-transparent" />
 
