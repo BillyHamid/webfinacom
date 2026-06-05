@@ -67,32 +67,36 @@ export default function FinacomPlusShowcase() {
                 aria-hidden="true"
               />
 
-              {/* ─── 3 phones en cascade ─── */}
+              {/* ─── 3 phones en cascade (1 seul sur mobile) ─── */}
               <div className="relative flex items-center justify-center gap-2 sm:gap-3 lg:gap-4">
-                {/* Phone GAUCHE — décalé bas, plus petit */}
-                <PhoneMockup
-                  width="w-[130px] sm:w-[150px] lg:w-[160px]"
-                  translateY="translate-y-10"
-                  objectPosition="top"
-                  shadowIntensity={0.18}
-                />
+                {/* Phone GAUCHE — caché sur mobile, visible sm+ */}
+                <div className="hidden sm:block">
+                  <PhoneMockup
+                    width="w-[130px] sm:w-[150px] lg:w-[160px]"
+                    translateY="translate-y-10"
+                    objectPosition="top"
+                    shadowIntensity={0.18}
+                  />
+                </div>
 
-                {/* Phone CENTRE — principal, plus grand */}
+                {/* Phone CENTRE — toujours visible */}
                 <PhoneMockup
-                  width="w-[170px] sm:w-[200px] lg:w-[220px]"
+                  width="w-[200px] sm:w-[200px] lg:w-[220px]"
                   translateY=""
                   objectPosition="center"
                   shadowIntensity={0.3}
                   emphasized
                 />
 
-                {/* Phone DROITE — décalé bas, plus petit */}
-                <PhoneMockup
-                  width="w-[130px] sm:w-[150px] lg:w-[160px]"
-                  translateY="translate-y-10"
-                  objectPosition="bottom"
-                  shadowIntensity={0.18}
-                />
+                {/* Phone DROITE — caché sur mobile, visible sm+ */}
+                <div className="hidden sm:block">
+                  <PhoneMockup
+                    width="w-[130px] sm:w-[150px] lg:w-[160px]"
+                    translateY="translate-y-10"
+                    objectPosition="bottom"
+                    shadowIntensity={0.18}
+                  />
+                </div>
               </div>
 
               {/* ─── Notification flottante "Virement reçu" ─── */}

@@ -45,9 +45,8 @@ const CATEGORIES = [
     name: 'Services digitaux',
     count: 9,
     examples: 'FINACOM+ · DCOLLECT · BANK TO WALLET',
-    // Smartphone tenu en main = mobile banking
-    image:
-      'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=1000&q=80',
+    // Illustration "digital services" (main + icônes flottantes)
+    image: '/services-digitaux.png',
     accent: 'blue',
     accentRgb: 'rgba(37,99,235,',
     featured: true,
@@ -225,9 +224,6 @@ export default function ServicesPreview() {
               className="transition-transform duration-300 group-hover:translate-x-1"
             />
           </Link>
-          <p className="text-xs text-gray-400 mt-3">
-            23 produits & services · 4 familles · 6 phares digitaux
-          </p>
         </RevealOnScroll>
       </div>
     </section>

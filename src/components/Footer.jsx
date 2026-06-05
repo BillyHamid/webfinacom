@@ -1,173 +1,160 @@
-import { MapPin, Phone, Mail, Clock, ArrowUp, Send } from 'lucide-react';
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { MapPin, Phone, Mail } from 'lucide-react';
 
+// ─── Réseaux sociaux (icônes inline pour éviter d'ajouter une dépendance) ──
 const FacebookIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-);
-const TwitterIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+  </svg>
 );
 const LinkedInIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+  </svg>
 );
 const InstagramIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 11-2.882 0 1.441 1.441 0 012.882 0z"/></svg>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 11-2.882 0 1.441 1.441 0 012.882 0z" />
+  </svg>
 );
 
-const footerLinks = {
-  services: [
-    { label: 'Épargne', href: '#' },
-    { label: 'Crédits', href: '#' },
-    { label: 'Mobile Money', href: '#' },
-    { label: 'Conseil Financier', href: '#' },
-    { label: 'Assurance', href: '#' },
-  ],
-  institution: [
-    { label: 'À propos', href: '#about' },
-    { label: 'Notre équipe', href: '#' },
-    { label: 'Gouvernance', href: '#' },
-    { label: 'Rapports annuels', href: '#' },
-    { label: 'Carrières', href: '#' },
-  ],
-  ressources: [
-    { label: 'FAQ', href: '#' },
-    { label: 'Blog', href: '#news' },
-    { label: 'Éducation financière', href: '#' },
-    { label: 'Conditions générales', href: '#' },
-    { label: 'Politique de confidentialité', href: '#' },
-  ],
-};
+// ─── Colonnes de liens ────────────────────────────────────────────────────
+const NAVIGATION = [
+  { label: 'Accueil', to: '/' },
+  { label: 'À propos', to: '/a-propos' },
+  { label: 'Produits & services', to: '/produits-et-services' },
+  { label: 'Blog', to: '/blog' },
+  { label: 'Médiathèque', to: '/mediatheque' },
+  { label: 'Contact', to: '/contact' },
+];
 
-const socialLinks = [
+const PRODUITS = [
+  { label: "Produits d'épargne", to: '/produits-et-services' },
+  { label: 'Produits de crédit', to: '/produits-et-services' },
+  { label: 'Services digitaux', to: '/produits-et-services' },
+  { label: 'Services rattachés', to: '/produits-et-services' },
+];
+
+const LEGAL = [
+  { label: 'Mentions légales', to: '#' },
+  { label: 'Conditions générales', to: '#' },
+  { label: 'Politique de confidentialité', to: '#' },
+  { label: 'Charte qualité', to: '#' },
+];
+
+const SOCIAL = [
   { icon: FacebookIcon, href: '#', label: 'Facebook' },
-  { icon: TwitterIcon, href: '#', label: 'Twitter' },
   { icon: LinkedInIcon, href: '#', label: 'LinkedIn' },
   { icon: InstagramIcon, href: '#', label: 'Instagram' },
 ];
 
 export default function Footer() {
-  const [email, setEmail] = useState('');
-
   return (
-    <footer className="bg-dark text-white relative overflow-hidden">
-      {/* Subtle top gradient */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/30 to-transparent" />
+    <footer className="bg-dark text-white">
+      {/* Bandeau supérieur (séparateur subtil) */}
+      <div className="h-px bg-gradient-to-r from-transparent via-primary-500/40 to-transparent" />
 
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary-500/5 rounded-full blur-[120px]" />
-
-      {/* Newsletter bar */}
-      <div className="border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-            <div className="text-center lg:text-left">
-              <h3 className="text-xl font-bold text-white mb-1">Restez informé</h3>
-              <p className="text-sm text-white/40">Recevez nos dernières actualités et offres directement dans votre boîte mail.</p>
-            </div>
-            <div className="flex w-full max-w-md">
-              <input
-                type="email"
-                placeholder="Votre adresse email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-5 py-3.5 rounded-l-xl bg-white/5 border border-white/10 border-r-0 text-sm text-white placeholder-white/30 focus:outline-none focus:border-primary-500/50 transition-colors"
+      {/* Contenu principal */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
+          {/* ─── Colonne marque ─── */}
+          <div className="sm:col-span-2 lg:col-span-4">
+            <Link to="/" className="inline-flex items-center gap-3 mb-4 group">
+              <img
+                src="/logo-finacom.png"
+                alt="FINACOM"
+                className="h-10 w-auto transition-transform group-hover:scale-105"
               />
-              <button className="px-6 py-3.5 rounded-r-xl bg-primary-500 hover:bg-primary-600 text-white font-semibold text-sm transition-all duration-300 flex items-center gap-2 shadow-lg shadow-primary-500/20">
-                <Send size={14} />
-                S'abonner
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main footer */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
-          {/* Brand column */}
-          <div className="lg:col-span-4">
-            <div className="flex items-center gap-3 mb-6">
-              <img src="/logo-finacom.png" alt="FINACOM" className="h-12 w-auto" />
               <div>
-                <span className="text-lg font-extrabold tracking-tight">FINACOM</span>
-                <span className="block text-[9px] uppercase tracking-[0.25em] text-accent-400 -mt-0.5 font-medium">
+                <div className="text-base font-extrabold tracking-tight">FINACOM</div>
+                <div className="text-[9px] uppercase tracking-[0.25em] text-accent-400 font-medium -mt-0.5">
                   Finance Communautaire
-                </span>
+                </div>
               </div>
-            </div>
-            <p className="text-white/35 text-sm leading-relaxed mb-8 max-w-xs">
-              Institution de microfinance agréée par la BCEAO, FINACOM œuvre pour l'inclusion
-              financière des communautés burkinabè depuis plus de 15 ans.
+            </Link>
+
+            <p className="text-white/50 text-sm leading-relaxed mb-5 max-w-sm">
+              Institution de microfinance moderne, agréée BCEAO. Branche financière
+              de la FEME, au service du développement burkinabè depuis plus de 50 ans.
             </p>
 
-            {/* Contact info */}
-            <div className="space-y-3.5">
-              <a href="#" className="flex items-center gap-3 text-white/40 hover:text-white text-sm transition-colors group">
-                <div className="w-8 h-8 rounded-lg bg-white/5 group-hover:bg-primary-500/20 flex items-center justify-center transition-colors">
-                  <MapPin size={14} className="text-primary-400" />
-                </div>
-                01 BP 1234 Ouagadougou 01, Burkina Faso
-              </a>
-              <a href="tel:+22625000000" className="flex items-center gap-3 text-white/40 hover:text-white text-sm transition-colors group">
-                <div className="w-8 h-8 rounded-lg bg-white/5 group-hover:bg-primary-500/20 flex items-center justify-center transition-colors">
-                  <Phone size={14} className="text-primary-400" />
-                </div>
-                +226 25 00 00 00
-              </a>
-              <a href="mailto:info@finacom.bf" className="flex items-center gap-3 text-white/40 hover:text-white text-sm transition-colors group">
-                <div className="w-8 h-8 rounded-lg bg-white/5 group-hover:bg-primary-500/20 flex items-center justify-center transition-colors">
-                  <Mail size={14} className="text-primary-400" />
-                </div>
-                info@finacom.bf
-              </a>
-              <div className="flex items-center gap-3 text-white/40 text-sm">
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                  <Clock size={14} className="text-primary-400" />
-                </div>
-                Lun - Ven : 07h30 - 16h00
-              </div>
-            </div>
+            {/* Coordonnées compactes */}
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start gap-2.5 text-white/60">
+                <MapPin size={14} className="text-accent-400 mt-0.5 flex-shrink-0" />
+                <span>01 BP 1234 Ouagadougou 01, Burkina Faso</span>
+              </li>
+              <li>
+                <a
+                  href="tel:+22625000000"
+                  className="flex items-center gap-2.5 text-white/60 hover:text-white transition-colors"
+                >
+                  <Phone size={14} className="text-accent-400 flex-shrink-0" />
+                  +226 25 00 00 00
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:contact@finacom.bf"
+                  className="flex items-center gap-2.5 text-white/60 hover:text-white transition-colors"
+                >
+                  <Mail size={14} className="text-accent-400 flex-shrink-0" />
+                  contact@finacom.bf
+                </a>
+              </li>
+            </ul>
           </div>
 
-          {/* Link columns */}
-          <div className="lg:col-span-2 lg:col-start-6">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60 mb-6">
-              Services
+          {/* ─── Navigation ─── */}
+          <div className="lg:col-span-3 lg:col-start-6">
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent-400 mb-4">
+              Navigation
             </h4>
-            <ul className="space-y-3.5">
-              {footerLinks.services.map((link) => (
+            <ul className="space-y-2.5">
+              {NAVIGATION.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-sm text-white/35 hover:text-white hover:translate-x-1 transition-all duration-200 inline-block">
+                  <Link
+                    to={link.to}
+                    className="text-sm text-white/55 hover:text-white transition-colors"
+                  >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* ─── Produits & services ─── */}
           <div className="lg:col-span-2">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60 mb-6">
-              Institution
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent-400 mb-4">
+              Nos offres
             </h4>
-            <ul className="space-y-3.5">
-              {footerLinks.institution.map((link) => (
+            <ul className="space-y-2.5">
+              {PRODUITS.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-sm text-white/35 hover:text-white hover:translate-x-1 transition-all duration-200 inline-block">
+                  <Link
+                    to={link.to}
+                    className="text-sm text-white/55 hover:text-white transition-colors"
+                  >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* ─── Mentions légales ─── */}
           <div className="lg:col-span-2">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.15em] text-white/60 mb-6">
-              Ressources
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent-400 mb-4">
+              Légal
             </h4>
-            <ul className="space-y-3.5">
-              {footerLinks.ressources.map((link) => (
+            <ul className="space-y-2.5">
+              {LEGAL.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-sm text-white/35 hover:text-white hover:translate-x-1 transition-all duration-200 inline-block">
+                  <a
+                    href={link.to}
+                    className="text-sm text-white/55 hover:text-white transition-colors"
+                  >
                     {link.label}
                   </a>
                 </li>
@@ -177,37 +164,25 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/25">
-            &copy; {new Date().getFullYear()} FINACOM — Finance Communautaire. Tous droits réservés.
+      {/* ─── Barre du bas : copyright + réseaux ─── */}
+      <div className="border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-white/40">
+            © {new Date().getFullYear()} <span className="text-white/70 font-semibold">FINACOM</span> · Tous droits réservés
           </p>
 
-          {/* Social */}
           <div className="flex items-center gap-2">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
+            {SOCIAL.map(({ icon: Icon, href, label }) => (
               <a
                 key={label}
                 href={href}
                 aria-label={label}
-                className="w-9 h-9 rounded-xl bg-white/5 hover:bg-primary-500 flex items-center justify-center text-white/30 hover:text-white transition-all duration-300"
+                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-accent-500 hover:text-primary-900 text-white/60 flex items-center justify-center transition-all duration-300"
               >
                 <Icon />
               </a>
             ))}
           </div>
-
-          {/* Back to top */}
-          <a
-            href="#hero"
-            className="group flex items-center gap-2 text-xs text-white/25 hover:text-white/60 transition-colors"
-          >
-            Retour en haut
-            <div className="w-8 h-8 rounded-lg bg-white/5 group-hover:bg-primary-500 flex items-center justify-center transition-all duration-300">
-              <ArrowUp size={14} className="text-white/30 group-hover:text-white" />
-            </div>
-          </a>
         </div>
       </div>
     </footer>

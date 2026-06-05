@@ -370,7 +370,7 @@ export default function About() {
           </RevealOnScroll>
 
           {/* Cards éditoriales détaillées */}
-          <StaggerChildren className="grid lg:grid-cols-3 gap-6" stagger={140}>
+          <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6" stagger={140}>
             {VALUES.map(({ icon: Icon, title, short, desc, pillar }, i) => (
               <div
                 key={title}

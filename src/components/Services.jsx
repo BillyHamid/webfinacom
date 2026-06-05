@@ -248,7 +248,7 @@ export default function Services() {
   const ActiveIcon = activeCategory.icon;
 
   return (
-    <section id="services" className="py-24 lg:py-28 bg-white relative overflow-hidden">
+    <section id="services" className="py-16 sm:py-20 lg:py-28 bg-white relative overflow-hidden">
       {/* Décoration de fond */}
       <div
         className="absolute inset-0 opacity-[0.4] pointer-events-none"

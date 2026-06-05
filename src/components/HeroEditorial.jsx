@@ -1,39 +1,29 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, ArrowDown, ChevronDown, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 
 const HERO_IMAGE = '/hero-about.jpg';
 
-const TITLE_LINES = [
-  { text: 'Là où chaque', accent: false },
-  { text: 'épargne devient', accent: false },
-  { text: 'liberté', accent: true },
-];
-
-const LIVE_TICKER = [
-  { icon: '🟢', text: 'comptes ouverts cette semaine', value: '+ 142' },
-  { icon: '💰', text: "millions FCFA d'épargne collectée", value: '+ 5,2' },
-  { icon: '🤝', text: 'crédits financés ce mois', value: '+ 87' },
-  { icon: '🌍', text: 'régions couvertes', value: '13' },
-];
+// Mots rotatifs animés (identique à Hero 1)
+const ROTATING_WORDS = ['projets,', 'rêves,', 'ambitions,', 'commerces,'];
+const WORD_DURATION = 2800; // ms
 
 export default function HeroEditorial() {
   const [loaded, setLoaded] = useState(false);
-  const [tickerIdx, setTickerIdx] = useState(0);
+  const [wordIdx, setWordIdx] = useState(0);
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 50);
     return () => clearTimeout(t);
   }, []);
 
+  // Rotation des mots dans le titre
   useEffect(() => {
     const t = setInterval(
-      () => setTickerIdx((i) => (i + 1) % LIVE_TICKER.length),
-      3500
+      () => setWordIdx((i) => (i + 1) % ROTATING_WORDS.length),
+      WORD_DURATION
     );
     return () => clearInterval(t);
   }, []);
-
-  const ticker = LIVE_TICKER[tickerIdx];
 
   return (
     <section
@@ -75,41 +65,6 @@ export default function HeroEditorial() {
       <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-accent-400/40 to-transparent hidden lg:block" />
       <div className="absolute left-6 top-1/2 -translate-y-1/2 w-px h-28 bg-gradient-to-b from-transparent via-accent-400 to-transparent hidden lg:block" />
 
-      {/* ═══════════ BARRE SUPÉRIEURE ═══════════ */}
-      <div
-        className="absolute top-28 left-0 right-0 z-10 px-4 sm:px-6 lg:px-12 hidden md:flex items-center justify-between"
-        style={{
-          opacity: loaded ? 1 : 0,
-          transform: loaded ? 'translateY(0)' : 'translateY(-12px)',
-          transition: 'opacity 800ms ease-out 200ms, transform 800ms ease-out 200ms',
-        }}
-      >
-        {/* Marque éditoriale gauche */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-px bg-accent-400" />
-          <div>
-            <div className="text-accent-400 text-[10px] uppercase tracking-[0.3em] font-bold">
-              FINACOM
-            </div>
-            <div className="text-white/50 text-[9px] uppercase tracking-[0.2em]">
-              Édition 2025
-            </div>
-          </div>
-        </div>
-
-        {/* Marqueur droit */}
-        <div className="flex items-center gap-3">
-          <div className="text-right">
-            <div className="text-white/50 text-[9px] uppercase tracking-[0.2em] mb-0.5">
-              Ouagadougou · Burkina Faso
-            </div>
-            <div className="text-accent-400 text-[10px] uppercase tracking-[0.3em] font-bold">
-              N° 01 / Microfinance
-            </div>
-          </div>
-          <div className="w-8 h-px bg-accent-400" />
-        </div>
-      </div>
 
       {/* ═══════════ CONTENU PRINCIPAL ═══════════ */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full py-32">
@@ -132,73 +87,118 @@ export default function HeroEditorial() {
             </span>
           </div>
 
-          {/* Titre éditorial massif — révélation ligne par ligne */}
-          <h1 className="text-white font-extrabold tracking-tight leading-[0.95] mb-10">
-            {TITLE_LINES.map((line, i) => (
-              <div
-                key={i}
-                className="overflow-hidden"
-                style={{ paddingBottom: '0.1em' }}
+          {/* Titre éditorial massif — avec mot rotatif animé */}
+          <h1
+            className="text-white font-extrabold tracking-tight leading-[0.95] mb-10"
+            style={{ letterSpacing: '-0.035em' }}
+          >
+            {/* Ligne 1 — "Faire grandir" */}
+            <div className="overflow-hidden" style={{ paddingBottom: '0.1em' }}>
+              <span
+                className="inline-block text-[2.75rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[6.75rem]"
+                style={{
+                  transform: loaded ? 'translateY(0)' : 'translateY(110%)',
+                  opacity: loaded ? 1 : 0,
+                  transition:
+                    'transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 600ms, opacity 700ms ease-out 600ms',
+                }}
               >
-                <div
-                  className="inline-block"
+                Faire grandir
+              </span>
+            </div>
+
+            {/* Ligne 2 — "vos [mot rotatif]" */}
+            <div className="overflow-hidden" style={{ paddingBottom: '0.1em' }}>
+              <span
+                className="inline-block text-[2.75rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[6.75rem]"
+                style={{
+                  transform: loaded ? 'translateY(0)' : 'translateY(110%)',
+                  opacity: loaded ? 1 : 0,
+                  transition:
+                    'transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 780ms, opacity 700ms ease-out 780ms',
+                }}
+              >
+                vos{' '}
+                <span
+                  className="relative inline-block align-baseline overflow-hidden"
                   style={{
-                    transform: loaded ? 'translateY(0)' : 'translateY(110%)',
-                    opacity: loaded ? 1 : 0,
-                    transition: `transform 900ms cubic-bezier(0.22, 1, 0.36, 1) ${600 + i * 180}ms, opacity 700ms ease-out ${600 + i * 180}ms`,
+                    minWidth: '11ch',
+                    height: '1.05em',
+                    verticalAlign: 'bottom',
                   }}
                 >
-                  {line.accent ? (
-                    <span className="relative inline-block">
-                      <span
-                        className="text-accent-400 italic"
-                        style={{
-                          fontSize: '1.05em',
-                          fontFamily: 'serif',
-                          fontStyle: 'italic',
-                          letterSpacing: '-0.04em',
-                        }}
-                      >
-                        {line.text}
-                      </span>
-                      {/* Soulignement gros qui se dessine */}
-                      <svg
-                        className="absolute left-0 -bottom-2 w-full"
-                        viewBox="0 0 300 14"
-                        fill="none"
-                        preserveAspectRatio="none"
-                        style={{ height: '0.18em' }}
-                      >
-                        <path
-                          d="M2 7 Q 80 2 150 6 T 298 5"
-                          stroke="#f6b93b"
-                          strokeWidth="4"
-                          strokeLinecap="round"
-                          strokeDasharray="380"
-                          strokeDashoffset={loaded ? 0 : 380}
-                          style={{
-                            transition:
-                              'stroke-dashoffset 1400ms cubic-bezier(0.65, 0, 0.35, 1) 1500ms',
-                          }}
-                        />
-                      </svg>
-                    </span>
-                  ) : (
+                  {ROTATING_WORDS.map((w, i) => (
                     <span
-                      className="text-[2.75rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[6.75rem]"
-                      style={{ letterSpacing: '-0.035em' }}
+                      key={w}
+                      className="absolute left-0 top-0 whitespace-nowrap"
+                      style={{
+                        opacity: i === wordIdx ? 1 : 0,
+                        transform: `translateY(${
+                          i === wordIdx ? '0' : i < wordIdx ? '-40%' : '40%'
+                        })`,
+                        transition:
+                          'opacity 500ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)',
+                      }}
                     >
-                      {line.text}
+                      {w}
                     </span>
-                  )}
-                  {line.accent && (
-                    <span className="text-white text-[2.75rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[6.75rem]">
-                      .
+                  ))}
+                </span>
+              </span>
+            </div>
+
+            {/* Ligne 3 — "ensemble." en accent italique doré */}
+            <div className="overflow-hidden" style={{ paddingBottom: '0.1em' }}>
+              <span
+                className="inline-block"
+                style={{
+                  transform: loaded ? 'translateY(0)' : 'translateY(110%)',
+                  opacity: loaded ? 1 : 0,
+                  transition:
+                    'transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 960ms, opacity 700ms ease-out 960ms',
+                }}
+              >
+                <span className="relative inline-block">
+                  <span
+                    className="text-accent-400 italic"
+                    style={{
+                      fontSize: 'calc(1.05 * (2.75rem))',
+                      fontFamily: 'serif',
+                      fontStyle: 'italic',
+                      letterSpacing: '-0.04em',
+                    }}
+                  >
+                    <span className="text-[2.75rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[6.75rem]">
+                      ensemble
                     </span>
-                  )}
-                </div>
-              </div>
-            ))}
+                  </span>
+                  {/* Soulignement doré qui se dessine */}
+                  <svg
+                    className="absolute left-0 -bottom-2 w-full"
+                    viewBox="0 0 300 14"
+                    fill="none"
+                    preserveAspectRatio="none"
+                    style={{ height: '0.18em' }}
+                  >
+                    <path
+                      d="M2 7 Q 80 2 150 6 T 298 5"
+                      stroke="#f6b93b"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                      strokeDasharray="380"
+                      strokeDashoffset={loaded ? 0 : 380}
+                      style={{
+                        transition:
+                          'stroke-dashoffset 1400ms cubic-bezier(0.65, 0, 0.35, 1) 1500ms',
+                      }}
+                    />
+                  </svg>
+                </span>
+                <span className="text-white text-[2.75rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[6.75rem]">
+                  .
+                </span>
+              </span>
+            </div>
           </h1>
 
           {/* Texte éditorial */}
@@ -273,39 +273,6 @@ export default function HeroEditorial() {
         </div>
       </div>
 
-      {/* ═══════════ TICKER LIVE BAS-GAUCHE ═══════════ */}
-      <div
-        className="absolute bottom-8 left-4 sm:left-6 lg:left-12 z-10 hidden md:block"
-        style={{
-          opacity: loaded ? 1 : 0,
-          transform: loaded ? 'translateY(0)' : 'translateY(20px)',
-          transition:
-            'opacity 800ms ease-out 2000ms, transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 2000ms',
-        }}
-      >
-        <div className="flex items-center gap-3 px-5 py-3 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/15 shadow-2xl">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-          </span>
-          <span className="text-[10px] uppercase tracking-wider text-white/40 font-bold">
-            En direct
-          </span>
-          <span className="w-px h-3 bg-white/15" />
-          <div
-            key={tickerIdx}
-            className="flex items-center gap-2 animate-fade-in-up"
-          >
-            <span className="text-accent-400 font-extrabold text-sm tabular-nums">
-              {ticker.value}
-            </span>
-            <span className="text-white/80 text-sm font-medium">
-              {ticker.text}
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* ═══════════ SCROLL INDICATOR BAS-DROITE ═══════════ */}
       <a
         href="#about"
@@ -324,20 +291,6 @@ export default function HeroEditorial() {
           className="text-accent-400 animate-bounce group-hover:scale-110 transition-transform"
         />
       </a>
-
-      {/* ═══════════ "ÉDITION" BADGE COIN HAUT-DROIT ═══════════ */}
-      <div
-        className="absolute top-24 right-4 sm:right-6 lg:right-12 z-10 md:hidden"
-        style={{
-          opacity: loaded ? 1 : 0,
-          transition: 'opacity 800ms ease-out 600ms',
-        }}
-      >
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-500/95 backdrop-blur-sm text-primary-900 text-[9px] uppercase tracking-[0.2em] font-bold shadow-lg">
-          <Sparkles size={10} />
-          Édition 2025
-        </div>
-      </div>
     </section>
   );
 }

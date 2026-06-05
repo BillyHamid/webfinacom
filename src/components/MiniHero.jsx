@@ -32,7 +32,7 @@ export default function MiniHero({
   }, []);
 
   return (
-    <section className="relative pt-36 lg:pt-44 pb-24 lg:pb-32 bg-primary-900 overflow-hidden min-h-[420px] lg:min-h-[520px]">
+    <section className="relative pt-28 sm:pt-32 lg:pt-44 pb-16 sm:pb-20 lg:pb-32 bg-primary-900 overflow-hidden min-h-[320px] sm:min-h-[420px] lg:min-h-[520px]">
       {/* ── Photo de fond (si fournie) avec Ken Burns ── */}
       {imageUrl && (
         <div className="absolute inset-0">
@@ -109,7 +109,7 @@ export default function MiniHero({
             </div>
 
             {/* Titre */}
-            <h1 className="text-white font-extrabold leading-[1.05] tracking-tight text-[2.25rem] sm:text-[2.75rem] lg:text-[3.5rem] xl:text-[3.75rem] mb-5">
+            <h1 className="text-white font-extrabold leading-[1.05] tracking-tight text-[1.75rem] sm:text-[2.25rem] md:text-[2.75rem] lg:text-[3.5rem] xl:text-[3.75rem] mb-4 sm:mb-5">
               {title}{' '}
               {highlight && (
                 <span className="text-accent-400 relative inline-block">

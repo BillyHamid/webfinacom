@@ -108,7 +108,7 @@ export default function Navbar() {
                     : 'border-white/25 text-white hover:bg-white/10 hover:border-white/40'
                 }`}
               >
-                Espace Client
+                Espace FINACOM+
               </Link>
               <Link
                 to="/contact"
@@ -176,7 +176,7 @@ export default function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="block text-center px-4 py-3.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:border-primary-300"
                 >
-                  Espace Client
+                  Espace FINACOM+
                 </Link>
                 <Link
                   to="/contact"
