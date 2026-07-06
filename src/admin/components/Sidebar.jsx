@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, FileText, Newspaper, CalendarDays,
-  Settings, ChevronLeft, ChevronRight,
+  Settings, ChevronLeft, ChevronRight, Image as ImageIcon, Quote, Handshake, BarChart3,
 } from 'lucide-react';
 
 const navItems = [
@@ -9,6 +9,10 @@ const navItems = [
   { label: 'Pages', icon: FileText, path: '/admin/pages' },
   { label: 'Actualités', icon: Newspaper, path: '/admin/news' },
   { label: 'Événements', icon: CalendarDays, path: '/admin/events' },
+  { label: 'Médiathèque', icon: ImageIcon, path: '/admin/media' },
+  { label: 'Témoignages', icon: Quote, path: '/admin/testimonials' },
+  { label: 'Partenaires', icon: Handshake, path: '/admin/partners' },
+  { label: 'Chiffres-clés', icon: BarChart3, path: '/admin/metrics' },
   { label: 'Paramètres', icon: Settings, path: '/admin/settings' },
 ];
 
@@ -29,7 +33,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
       {/* Logo */}
       <div className={`flex items-center h-16 border-b border-gray-100 px-4 ${collapsed ? 'justify-center' : 'gap-3'}`}>
         <img
-          src="/logo-finacom.png"
+          src="/logo-finacom-removebg-preview.png"
           alt="FINACOM"
           className={`object-contain flex-shrink-0 transition-all duration-300 ${collapsed ? 'w-9 h-9' : 'w-10 h-10'}`}
         />

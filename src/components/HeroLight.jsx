@@ -330,7 +330,7 @@ export default function HeroLight() {
                     <div className="text-white font-bold text-xs">Carte Avenir</div>
                   </div>
                   <img
-                    src="/logo-finacom.png"
+                    src="/logo-finacom-removebg-preview.png"
                     alt=""
                     className="h-6 w-auto opacity-90"
                     onError={(e) => (e.currentTarget.style.display = 'none')}

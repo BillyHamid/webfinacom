@@ -1,6 +1,6 @@
 import TopBar from '../components/TopBar';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { useData } from '../context/DataContext';
+import { useSupabaseTable } from '../../hooks/useSupabaseTable';
 import {
   FileText, CalendarDays, Newspaper, Clock,
   Activity, ArrowUpRight, Globe, PenLine, MapPin, Tag,
@@ -32,14 +32,16 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function Dashboard() {
   const { collapsed, setCollapsed } = useOutletContext();
   const navigate = useNavigate();
-  const { articles, events, pages } = useData();
+  const { data: articles } = useSupabaseTable('articles', { orderBy: 'created_at', ascending: false });
+  const { data: events } = useSupabaseTable('events', { orderBy: 'event_date', ascending: true });
+  const { data: pages } = useSupabaseTable('pages', { orderBy: 'updated_at', ascending: false });
 
   // --- Indicateurs calculés depuis les vraies données ---
   const publishedArticles = articles.filter((a) => a.status === 'published').length;
   const draftArticles = articles.filter((a) => a.status === 'draft').length;
 
   const today = new Date();
-  const upcomingEvents = events.filter((e) => new Date(e.date) >= today).length;
+  const upcomingEvents = events.filter((e) => new Date(e.event_date) >= today).length;
   const publishedPages = pages.filter((p) => p.status === 'published').length;
   const totalDrafts = draftArticles + pages.filter((p) => p.status === 'draft').length;
 
@@ -95,16 +97,13 @@ export default function Dashboard() {
   const MONTHS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
   const monthlyMap = {};
   articles.forEach((a) => {
-    // Extraire le mois depuis la date "12 Avr 2026"
-    const parts = a.date.split(' ');
-    const monthLabel = parts[1];
-    const shortMap = { 'Jan': 'Jan', 'Fév': 'Fév', 'Mar': 'Mar', 'Avr': 'Avr', 'Mai': 'Mai', 'Juin': 'Jun', 'Juil': 'Jul', 'Août': 'Aoû', 'Sep': 'Sep', 'Oct': 'Oct', 'Nov': 'Nov', 'Déc': 'Déc' };
-    const key = shortMap[monthLabel] || monthLabel;
+    const d = new Date(a.published_at || a.created_at);
+    const key = MONTHS[d.getMonth()];
     if (!monthlyMap[key]) monthlyMap[key] = { articles: 0, events: 0 };
     monthlyMap[key].articles += 1;
   });
   events.forEach((e) => {
-    const d = new Date(e.date);
+    const d = new Date(`${e.event_date}T00:00:00`);
     const key = MONTHS[d.getMonth()];
     if (!monthlyMap[key]) monthlyMap[key] = { articles: 0, events: 0 };
     monthlyMap[key].events += 1;
@@ -123,22 +122,22 @@ export default function Dashboard() {
 
   // Prochains événements triés par date
   const upcomingEventsList = events
-    .filter((e) => new Date(e.date) >= today)
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
+    .filter((e) => new Date(e.event_date) >= today)
+    .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
 
   // Activité récente depuis les vraies données
   const recentActivity = [
     ...articles.slice(0, 3).map((a) => ({
       action: a.status === 'published' ? 'Article publié' : 'Brouillon créé',
       detail: `"${a.title}"`,
-      time: a.date,
+      time: new Date(a.published_at || a.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }),
       color: a.status === 'published' ? 'bg-primary-500' : 'bg-gray-400',
       path: '/admin/news',
     })),
     ...events.slice(0, 2).map((e) => ({
       action: 'Événement ajouté',
       detail: `"${e.title}"`,
-      time: new Date(e.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }),
+      time: new Date(`${e.event_date}T00:00:00`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }),
       color: e.color,
       path: '/admin/events',
     })),
@@ -268,7 +267,7 @@ export default function Dashboard() {
                     <div className="flex items-center gap-3 mt-0.5 text-[10px] text-gray-400">
                       <span className="flex items-center gap-1">
                         <Clock size={9} />
-                        {new Date(e.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                        {new Date(`${e.event_date}T00:00:00`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
                       </span>
                       <span className="flex items-center gap-1"><MapPin size={9} />{e.location}</span>
                     </div>

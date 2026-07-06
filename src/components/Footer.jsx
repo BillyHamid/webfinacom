@@ -61,7 +61,7 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-4">
             <Link to="/" className="inline-flex items-center gap-3 mb-4 group">
               <img
-                src="/logo-finacom.png"
+                src="/logo-finacom-removebg-preview.png"
                 alt="FINACOM"
                 className="h-10 w-auto transition-transform group-hover:scale-105"
               />

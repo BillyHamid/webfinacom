@@ -1,9 +1,21 @@
 import { Bell, Search, ChevronDown, Moon, Sun, Menu } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function TopBar({ title, subtitle, onToggleSidebar }) {
   const [showNotif, setShowNotif] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/admin/login', { replace: true });
+  };
+
+  const email = user?.email || '';
+  const initials = email ? email.slice(0, 2).toUpperCase() : 'AD';
 
   const notifications = [
     { id: 1, text: 'Nouveau utilisateur inscrit', time: 'Il y a 5 min', unread: true },
@@ -81,10 +93,10 @@ export default function TopBar({ title, subtitle, onToggleSidebar }) {
             className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-xl hover:bg-gray-50 transition-colors"
           >
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-xs font-bold">
-              AD
+              {initials}
             </div>
             <div className="hidden sm:block text-left">
-              <p className="text-xs font-semibold text-dark leading-tight">Admin FINACOM</p>
+              <p className="text-xs font-semibold text-dark leading-tight">{email || 'Admin FINACOM'}</p>
               <p className="text-[10px] text-gray-400">Administrateur</p>
             </div>
             <ChevronDown size={14} className="text-gray-300 hidden sm:block" />
@@ -98,7 +110,7 @@ export default function TopBar({ title, subtitle, onToggleSidebar }) {
                 </button>
               ))}
               <div className="border-t border-gray-100 mt-1 pt-1">
-                <button className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors">
+                <button onClick={handleSignOut} className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors">
                   Déconnexion
                 </button>
               </div>

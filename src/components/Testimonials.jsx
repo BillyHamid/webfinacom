@@ -1,47 +1,26 @@
 import { useState } from 'react';
 import { Quote, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
-
-const testimonials = [
-  {
-    name: 'Aminata Ouédraogo',
-    role: 'Commerçante, Ouagadougou',
-    text: 'Grâce au crédit FINACOM, j\'ai pu agrandir mon commerce et employer trois personnes. Leur accompagnement a été déterminant dans la réussite de mon projet.',
-    rating: 5,
-    initials: 'AO',
-    color: 'bg-primary-500',
-  },
-  {
-    name: 'Ibrahim Sanou',
-    role: 'Agriculteur, Bobo-Dioulasso',
-    text: 'FINACOM comprend les réalités du monde agricole. Leur crédit saisonnier m\'a permis de moderniser mon exploitation et d\'augmenter mes rendements de 40%.',
-    rating: 5,
-    initials: 'IS',
-    color: 'bg-accent-500',
-  },
-  {
-    name: 'Fatimata Kaboré',
-    role: 'Présidente d\'association, Koudougou',
-    text: 'L\'épargne collective proposée par FINACOM a transformé notre groupement de femmes. Nous avons pu financer 12 micro-projets en un an grâce à leur appui.',
-    rating: 5,
-    initials: 'FK',
-    color: 'bg-emerald-500',
-  },
-  {
-    name: 'Moussa Traoré',
-    role: 'Entrepreneur, Ouagadougou',
-    text: 'La rapidité et la souplesse de FINACOM sont incomparables. En une semaine, j\'avais mon financement. Leur service client est toujours disponible et à l\'écoute.',
-    rating: 5,
-    initials: 'MT',
-    color: 'bg-blue-500',
-  },
-];
+import { useSupabaseTable } from '../hooks/useSupabaseTable';
+import Loader from './Loader';
 
 export default function Testimonials() {
   const [active, setActive] = useState(0);
+  const { data: testimonials, loading } = useSupabaseTable('testimonials', { orderBy: 'sort_order' });
+
+  if (loading) {
+    return (
+      <section className="py-28 bg-white">
+        <Loader fullScreen={false} label="" />
+      </section>
+    );
+  }
+
+  if (testimonials.length === 0) return null;
 
   const prev = () => setActive((a) => (a === 0 ? testimonials.length - 1 : a - 1));
   const next = () => setActive((a) => (a === testimonials.length - 1 ? 0 : a + 1));
+  const current = testimonials[active];
 
   return (
     <section className="py-28 bg-white relative overflow-hidden">
@@ -71,22 +50,22 @@ export default function Testimonials() {
               <Quote size={48} className="absolute top-8 right-8 text-primary-100" />
 
               <div className="flex items-center gap-4 mb-8">
-                <div className={`w-14 h-14 rounded-2xl ${testimonials[active].color} flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
-                  {testimonials[active].initials}
+                <div className={`w-14 h-14 rounded-2xl ${current.color} flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
+                  {current.initials}
                 </div>
                 <div>
-                  <div className="font-bold text-dark text-lg">{testimonials[active].name}</div>
-                  <div className="text-sm text-gray-400">{testimonials[active].role}</div>
+                  <div className="font-bold text-dark text-lg">{current.name}</div>
+                  <div className="text-sm text-gray-400">{current.role}</div>
                 </div>
                 <div className="ml-auto flex gap-0.5">
-                  {Array.from({ length: testimonials[active].rating }).map((_, i) => (
+                  {Array.from({ length: current.rating }).map((_, i) => (
                     <Star key={i} size={16} className="text-accent-400 fill-accent-400" />
                   ))}
                 </div>
               </div>
 
               <p className="text-lg sm:text-xl text-gray-600 leading-relaxed italic">
-                "{testimonials[active].text}"
+                "{current.content}"
               </p>
             </div>
 

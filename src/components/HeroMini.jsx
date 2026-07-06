@@ -315,7 +315,7 @@ export default function HeroMini() {
                 {/* Header notification style "Apple" */}
                 <div className="flex items-center justify-between px-5 py-3 bg-gray-50/80 backdrop-blur-md border-b border-gray-100">
                   <div className="flex items-center gap-2">
-                    <img src="/logo-finacom.png" alt="" className="h-5 w-auto" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                    <img src="/logo-finacom-removebg-preview.png" alt="" className="h-5 w-auto" onError={(e) => (e.currentTarget.style.display = 'none')} />
                     <span className="text-[11px] font-bold text-dark uppercase tracking-wider">
                       FINACOM
                     </span>

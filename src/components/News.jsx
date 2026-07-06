@@ -1,48 +1,27 @@
 import { Calendar, ArrowRight, Clock } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
-
-const articles = [
-  {
-    image: 'https://images.unsplash.com/photo-1556740758-90de940a6ed6?w=800&h=500&fit=crop',
-    category: 'Inclusion Financière',
-    date: '12 Avril 2026',
-    title: 'FINACOM lance un nouveau programme d\'éducation financière pour les femmes',
-    excerpt: 'Un programme ambitieux destiné aux femmes entrepreneures des zones rurales pour renforcer leurs compétences en gestion financière et développer l\'autonomie économique.',
-    readTime: '5 min',
-    featured: true,
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=400&fit=crop',
-    category: 'Innovation',
-    date: '5 Avril 2026',
-    title: 'Partenariat stratégique pour le Mobile Banking',
-    excerpt: 'FINACOM signe un accord avec les opérateurs télécom pour étendre ses services de mobile money.',
-    readTime: '3 min',
-    featured: false,
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=600&h=400&fit=crop',
-    category: 'Développement',
-    date: '28 Mars 2026',
-    title: 'Ouverture de 5 nouvelles agences en zone rurale',
-    excerpt: 'FINACOM poursuit son expansion avec l\'ouverture de nouvelles agences pour rapprocher les services financiers.',
-    readTime: '4 min',
-    featured: false,
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=400&fit=crop',
-    category: 'Formation',
-    date: '15 Mars 2026',
-    title: 'Session de formation sur la gestion des risques',
-    excerpt: 'Une formation dédiée aux agents de crédit pour améliorer l\'évaluation et la gestion des risques.',
-    readTime: '3 min',
-    featured: false,
-  },
-];
+import { useSupabaseTable } from '../hooks/useSupabaseTable';
+import Loader from './Loader';
 
 export default function News() {
-  const featured = articles.find((a) => a.featured);
-  const others = articles.filter((a) => !a.featured);
+  const { data: articles, loading } = useSupabaseTable('articles', {
+    eq: { status: 'published' },
+    orderBy: 'created_at',
+    ascending: false,
+  });
+
+  if (loading) {
+    return (
+      <section id="news" className="py-28 bg-white">
+        <Loader fullScreen={false} label="" />
+      </section>
+    );
+  }
+
+  if (articles.length === 0) return null;
+
+  const featured = articles[0];
+  const others = articles.slice(1, 4);
 
   return (
     <section id="news" className="py-28 bg-white">
@@ -59,7 +38,7 @@ export default function News() {
                 <span className="text-gradient-green">nouvelles</span>
               </h2>
             </div>
-            <a href="#" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 font-semibold hover:border-primary-300 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300">
+            <a href="/blog" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 font-semibold hover:border-primary-300 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300">
               Toutes les actualités
               <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
             </a>
@@ -72,7 +51,7 @@ export default function News() {
           <RevealOnScroll direction="left">
             <article className="group relative rounded-3xl overflow-hidden h-full min-h-[420px] cursor-pointer">
               <img
-                src={featured.image}
+                src={featured.image_url}
                 alt={featured.title}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -83,7 +62,7 @@ export default function News() {
                     {featured.category}
                   </span>
                   <span className="flex items-center gap-1 text-white/60 text-xs">
-                    <Calendar size={12} /> {featured.date}
+                    <Calendar size={12} /> {new Date(featured.published_at || featured.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </span>
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-accent-300 transition-colors leading-tight">
@@ -103,11 +82,11 @@ export default function News() {
           {/* Other articles stacked */}
           <div className="flex flex-col gap-4">
             {others.map((article, index) => (
-              <RevealOnScroll key={index} delay={index * 100} direction="right">
+              <RevealOnScroll key={article.id} delay={index * 100} direction="right">
                 <article className="group flex gap-5 p-4 rounded-2xl bg-white border border-gray-100 hover:border-primary-200 hover:shadow-lg transition-all duration-300 cursor-pointer">
                   <div className="flex-shrink-0 w-28 h-28 rounded-xl overflow-hidden">
                     <img
-                      src={article.image}
+                      src={article.image_url}
                       alt={article.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
@@ -118,7 +97,7 @@ export default function News() {
                         {article.category}
                       </span>
                       <span className="flex items-center gap-1">
-                        <Calendar size={10} /> {article.date}
+                        <Calendar size={10} /> {new Date(article.published_at || article.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
                       </span>
                     </div>
                     <h3 className="text-sm font-bold text-dark group-hover:text-primary-600 transition-colors leading-snug mb-1 line-clamp-2">

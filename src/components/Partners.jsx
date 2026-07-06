@@ -1,21 +1,14 @@
 import { RevealOnScroll } from '../hooks/useScrollReveal';
-
-const partners = [
-  { name: 'BCEAO', display: 'BCEAO' },
-  { name: 'Banque Mondiale', display: 'Banque Mondiale' },
-  { name: 'UEMOA', display: 'UEMOA' },
-  { name: 'FCPB', display: 'FCPB' },
-  { name: 'PNUD', display: 'PNUD' },
-  { name: 'AFD', display: 'AFD' },
-  { name: 'BCEAO', display: 'BCEAO' },
-  { name: 'Banque Mondiale', display: 'Banque Mondiale' },
-  { name: 'UEMOA', display: 'UEMOA' },
-  { name: 'FCPB', display: 'FCPB' },
-  { name: 'PNUD', display: 'PNUD' },
-  { name: 'AFD', display: 'AFD' },
-];
+import { useSupabaseTable } from '../hooks/useSupabaseTable';
 
 export default function Partners() {
+  const { data: partners, loading } = useSupabaseTable('partners', { orderBy: 'sort_order' });
+
+  if (loading || partners.length === 0) return null;
+
+  // Dupliqué pour un effet marquee continu (boucle sans coupure visible)
+  const looped = [...partners, ...partners];
+
   return (
     <section id="partners" className="py-14 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,14 +26,18 @@ export default function Partners() {
 
           <div className="overflow-hidden">
             <div className="flex gap-16 animate-marquee">
-              {partners.map((partner, i) => (
+              {looped.map((partner, i) => (
                 <div
-                  key={i}
+                  key={`${partner.id}-${i}`}
                   className="flex-shrink-0 flex items-center justify-center px-6 py-3 rounded-xl hover:bg-gray-50 transition-colors group cursor-default"
                 >
-                  <span className="text-lg font-bold text-gray-300 group-hover:text-primary-500 transition-colors duration-300 whitespace-nowrap">
-                    {partner.display}
-                  </span>
+                  {partner.logo_url ? (
+                    <img src={partner.logo_url} alt={partner.name} className="h-8 w-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+                  ) : (
+                    <span className="text-lg font-bold text-gray-300 group-hover:text-primary-500 transition-colors duration-300 whitespace-nowrap">
+                      {partner.name}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>

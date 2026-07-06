@@ -343,7 +343,7 @@ export default function HeroWow() {
                       <div className="text-white font-bold text-sm">Carte Avenir</div>
                     </div>
                     <img
-                      src="/logo-finacom.png"
+                      src="/logo-finacom-removebg-preview.png"
                       alt=""
                       className="h-7 w-auto opacity-90"
                       onError={(e) => (e.currentTarget.style.display = 'none')}

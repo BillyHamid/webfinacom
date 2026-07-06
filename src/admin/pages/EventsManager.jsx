@@ -5,13 +5,21 @@ import {
   Plus, MapPin, Clock, Users, Pencil, Trash2,
   ChevronLeft, ChevronRight,
 } from 'lucide-react';
-import { useData } from '../context/DataContext';
+import { useSupabaseTable } from '../../hooks/useSupabaseTable';
+
+const EVENT_TYPES = ['Conférence', 'Formation', 'Assemblée', 'Événement'];
+const COLORS = ['bg-primary-500', 'bg-accent-500', 'bg-blue-500', 'bg-emerald-500'];
+
+const emptyForm = {
+  title: '', event_date: '', time_range: '', location: '',
+  type: EVENT_TYPES[0], capacity: '', description: '', color: COLORS[0],
+};
 
 const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
 const firstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
 
 function MiniCalendar({ events }) {
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 14));
+  const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const days = daysInMonth(year, month);
@@ -19,10 +27,11 @@ function MiniCalendar({ events }) {
   const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
   const eventDays = events.map((e) => {
-    const d = new Date(e.date);
+    const d = new Date(`${e.event_date}T00:00:00`);
     return { day: d.getDate(), month: d.getMonth(), year: d.getFullYear(), color: e.color };
   }).filter((e) => e.month === month && e.year === year);
 
+  const today = new Date();
   const prev = () => setCurrentDate(new Date(year, month - 1, 1));
   const next = () => setCurrentDate(new Date(year, month + 1, 1));
 
@@ -45,7 +54,7 @@ function MiniCalendar({ events }) {
         {Array.from({ length: days }).map((_, i) => {
           const day = i + 1;
           const event = eventDays.find((e) => e.day === day);
-          const isToday = day === 14 && month === 3 && year === 2026;
+          const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
           return (
             <div
               key={day}
@@ -67,52 +76,158 @@ function MiniCalendar({ events }) {
 
 export default function EventsManager() {
   const { collapsed, setCollapsed } = useOutletContext();
-  const { events, setEvents } = useData();
+  const { data: events, loading, create, update, remove } = useSupabaseTable('events', {
+    orderBy: 'event_date',
+    ascending: true,
+  });
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [form, setForm] = useState(emptyForm);
+  const [saving, setSaving] = useState(false);
+
+  const openNew = () => {
+    setEditingId(null);
+    setForm(emptyForm);
+    setShowForm(true);
+  };
+
+  const openEdit = (event) => {
+    setEditingId(event.id);
+    setForm({
+      title: event.title || '',
+      event_date: event.event_date || '',
+      time_range: event.time_range || '',
+      location: event.location || '',
+      type: event.type || EVENT_TYPES[0],
+      capacity: event.capacity ?? '',
+      description: event.description || '',
+      color: event.color || COLORS[0],
+    });
+    setShowForm(true);
+  };
+
+  const deleteEvent = async (id) => {
+    if (!confirm('Supprimer cet événement ?')) return;
+    await remove(id);
+  };
+
+  const save = async () => {
+    if (!form.title.trim() || !form.event_date) {
+      alert("Le nom et la date de l'événement sont requis.");
+      return;
+    }
+    setSaving(true);
+    try {
+      const values = { ...form, capacity: Number(form.capacity) || 0 };
+      if (editingId) {
+        await update(editingId, values);
+      } else {
+        await create(values);
+      }
+      setShowForm(false);
+    } catch (err) {
+      alert(`Échec de l'enregistrement : ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   if (showForm) {
     return (
       <>
-        <TopBar title="Nouvel événement" subtitle="Créer un événement" onToggleSidebar={() => setCollapsed(!collapsed)} />
+        <TopBar title={editingId ? "Modifier l'événement" : 'Nouvel événement'} subtitle="Créer un événement" onToggleSidebar={() => setCollapsed(!collapsed)} />
         <div className="p-6 max-w-3xl">
           <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Nom de l'événement</label>
-              <input type="text" placeholder="Ex: Forum de l'Inclusion Financière" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 transition-colors" />
+              <input
+                type="text"
+                placeholder="Ex: Forum de l'Inclusion Financière"
+                value={form.title}
+                onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 transition-colors"
+              />
             </div>
             <div className="grid grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Date</label>
-                <input type="date" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400" />
+                <input
+                  type="date"
+                  value={form.event_date}
+                  onChange={(e) => setForm((f) => ({ ...f, event_date: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400"
+                />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Horaires</label>
-                <input type="text" placeholder="09:00 - 17:00" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400" />
+                <input
+                  type="text"
+                  placeholder="09:00 - 17:00"
+                  value={form.time_range}
+                  onChange={(e) => setForm((f) => ({ ...f, time_range: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400"
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Lieu</label>
-                <input type="text" placeholder="Ville, Salle..." className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400" />
+                <input
+                  type="text"
+                  placeholder="Ville, Salle..."
+                  value={form.location}
+                  onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400"
+                />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Type</label>
-                <select className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 bg-white">
-                  <option>Conférence</option><option>Formation</option><option>Assemblée</option><option>Événement</option>
+                <select
+                  value={form.type}
+                  onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 bg-white"
+                >
+                  {EVENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-5">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Capacité</label>
+                <input
+                  type="number"
+                  placeholder="200 (0 = entrée libre)"
+                  value={form.capacity}
+                  onChange={(e) => setForm((f) => ({ ...f, capacity: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Couleur</label>
+                <select
+                  value={form.color}
+                  onChange={(e) => setForm((f) => ({ ...f, color: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 bg-white"
+                >
+                  {COLORS.map((c) => <option key={c} value={c}>{c.replace('bg-', '').replace('-500', '')}</option>)}
                 </select>
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Capacité</label>
-              <input type="number" placeholder="200" className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400" />
-            </div>
-            <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Description</label>
-              <textarea rows={4} placeholder="Décrivez l'événement..." className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 resize-none" />
+              <textarea
+                rows={4}
+                placeholder="Décrivez l'événement..."
+                value={form.description}
+                onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 resize-none"
+              />
             </div>
             <div className="flex justify-end gap-3 pt-2">
               <button onClick={() => setShowForm(false)} className="px-5 py-2.5 text-sm text-gray-500 hover:bg-gray-100 rounded-xl transition-colors">Annuler</button>
-              <button className="px-5 py-2.5 text-sm bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-semibold shadow-lg shadow-primary-600/15">Créer l'événement</button>
+              <button disabled={saving} onClick={save} className="px-5 py-2.5 text-sm bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-semibold shadow-lg shadow-primary-600/15 disabled:opacity-60">
+                {editingId ? "Enregistrer" : "Créer l'événement"}
+              </button>
             </div>
           </div>
         </div>
@@ -126,7 +241,7 @@ export default function EventsManager() {
 
       <div className="p-6">
         <div className="flex justify-end mb-6">
-          <button onClick={() => setShowForm(true)} className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/15">
+          <button onClick={openNew} className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/15">
             <Plus size={16} />
             Nouvel événement
           </button>
@@ -135,12 +250,14 @@ export default function EventsManager() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Events list */}
           <div className="lg:col-span-2 space-y-4">
+            {loading && <div className="text-sm text-gray-400 px-1">Chargement...</div>}
+            {!loading && events.length === 0 && <div className="text-sm text-gray-400 px-1">Aucun événement</div>}
             {events.map((event) => (
               <div key={event.id} className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-lg hover:shadow-gray-100 transition-all duration-300 group">
                 <div className="flex items-start gap-4">
                   <div className={`w-14 h-14 rounded-xl ${event.color} flex flex-col items-center justify-center text-white flex-shrink-0`}>
-                    <span className="text-lg font-bold leading-none">{new Date(event.date).getDate()}</span>
-                    <span className="text-[9px] uppercase tracking-wider">{new Date(event.date).toLocaleString('fr-FR', { month: 'short' })}</span>
+                    <span className="text-lg font-bold leading-none">{new Date(`${event.event_date}T00:00:00`).getDate()}</span>
+                    <span className="text-[9px] uppercase tracking-wider">{new Date(`${event.event_date}T00:00:00`).toLocaleString('fr-FR', { month: 'short' })}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-start justify-between">
@@ -149,12 +266,12 @@ export default function EventsManager() {
                         <h3 className="text-sm font-bold text-dark group-hover:text-primary-600 transition-colors">{event.title}</h3>
                       </div>
                       <div className="flex gap-1">
-                        <button className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-primary-600 transition-colors"><Pencil size={14} /></button>
-                        <button onClick={() => setEvents(events.filter((e) => e.id !== event.id))} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
+                        <button onClick={() => openEdit(event)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-primary-600 transition-colors"><Pencil size={14} /></button>
+                        <button onClick={() => deleteEvent(event.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-4 mt-2 text-xs text-gray-400">
-                      <span className="flex items-center gap-1"><Clock size={12} />{event.time}</span>
+                      <span className="flex items-center gap-1"><Clock size={12} />{event.time_range}</span>
                       <span className="flex items-center gap-1"><MapPin size={12} />{event.location}</span>
                       {event.capacity > 0 && <span className="flex items-center gap-1"><Users size={12} />{event.capacity} places</span>}
                     </div>

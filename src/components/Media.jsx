@@ -14,138 +14,13 @@ import {
   Film,
 } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
+import { useSupabaseTable } from '../hooks/useSupabaseTable';
+import Loader from './Loader';
 
-// ─── Médias par catégorie ───────────────────────────────────────────
-// TODO : remplacer par les vrais contenus FINACOM
-const MEDIA_LIBRARY = {
-  videos: {
-    label: 'Vidéos',
-    icon: Video,
-    accent: 'rose',
-    items: [
-      {
-        title: 'Présentation FINACOM',
-        desc: 'Découvrez en 2 minutes l\'histoire, les missions et les valeurs de FINACOM.',
-        thumb: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=800&q=80',
-        duration: '2:14',
-        date: '15 Mars 2025',
-        featured: true,
-      },
-      {
-        title: 'Témoignage : le crédit communautaire de campagne',
-        desc: 'Un groupement agricole de Koudougou raconte son expérience.',
-        thumb: 'https://images.unsplash.com/photo-1592982537447-7440770faae0?auto=format&fit=crop&w=800&q=80',
-        duration: '3:47',
-        date: '02 Février 2025',
-      },
-      {
-        title: 'Tutoriel : utiliser FINACOM+',
-        desc: 'Pas-à-pas pour installer et utiliser l\'application bancaire mobile.',
-        thumb: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80',
-        duration: '4:12',
-        date: '20 Janvier 2025',
-      },
-      {
-        title: 'Inauguration agence Bassinko',
-        desc: 'Reportage sur l\'ouverture de notre 8e agence à Ouagadougou.',
-        thumb: 'https://images.unsplash.com/photo-1573164574230-db1d5e960238?auto=format&fit=crop&w=800&q=80',
-        duration: '5:03',
-        date: '10 Décembre 2024',
-      },
-    ],
-  },
-  photos: {
-    label: 'Photos',
-    icon: ImageIcon,
-    accent: 'blue',
-    items: [
-      {
-        title: 'Journée portes ouvertes — Siège',
-        desc: 'Visite des locaux, ateliers et rencontres avec nos conseillers.',
-        thumb: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=800&q=80',
-        count: '28 photos',
-        date: '05 Mars 2025',
-        featured: true,
-      },
-      {
-        title: 'Équipe FINACOM 2025',
-        desc: 'Le portrait collectif de nos équipes à travers les 8 agences.',
-        thumb: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80',
-        count: '42 photos',
-        date: '01 Février 2025',
-      },
-      {
-        title: 'Rentrée Daar daré',
-        desc: 'Cérémonie de remise des carnets d\'épargne quotidienne dans les écoles.',
-        thumb: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=800&q=80',
-        count: '36 photos',
-        date: '15 Octobre 2024',
-      },
-      {
-        title: 'Campagne agricole Centre-Ouest',
-        desc: 'Les bénéficiaires du crédit communautaire de campagne en action.',
-        thumb: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?auto=format&fit=crop&w=800&q=80',
-        count: '24 photos',
-        date: '20 Septembre 2024',
-      },
-    ],
-  },
-  documents: {
-    label: 'Documents',
-    icon: FileText,
-    accent: 'accent',
-    items: [
-      {
-        title: 'Rapport annuel 2024',
-        desc: 'Synthèse de l\'année, chiffres clés, performances et perspectives.',
-        type: 'PDF',
-        size: '4,2 Mo',
-        pages: '64 pages',
-        date: '15 Avril 2025',
-        featured: true,
-      },
-      {
-        title: 'Brochure FINACOM+',
-        desc: 'Découvrez toutes les fonctionnalités de notre application mobile.',
-        type: 'PDF',
-        size: '1,8 Mo',
-        pages: '12 pages',
-        date: '05 Mars 2025',
-      },
-      {
-        title: "Conditions générales d'épargne",
-        desc: 'Tous les termes et conditions de nos produits d\'épargne (DAV, DAT, Daar daré).',
-        type: 'PDF',
-        size: '480 Ko',
-        pages: '8 pages',
-        date: '01 Janvier 2025',
-      },
-      {
-        title: 'Charte qualité de service',
-        desc: 'Notre engagement envers nos clients — délais, recours, transparence.',
-        type: 'PDF',
-        size: '320 Ko',
-        pages: '6 pages',
-        date: '10 Octobre 2024',
-      },
-      {
-        title: 'Grille tarifaire 2025',
-        desc: 'Tous les tarifs et conditions de nos produits et services.',
-        type: 'PDF',
-        size: '210 Ko',
-        pages: '4 pages',
-        date: '20 Janvier 2025',
-      },
-      {
-        title: "Statuts de l'association FINACOM",
-        desc: 'Document institutionnel — objet, gouvernance, fonctionnement.',
-        type: 'PDF',
-        size: '1,1 Mo',
-        pages: '24 pages',
-        date: '12 Juin 2023',
-      },
-    ],
-  },
+const CATEGORY_META = {
+  videos: { label: 'Vidéos', icon: Video, accent: 'rose', dbType: 'video' },
+  photos: { label: 'Photos', icon: ImageIcon, accent: 'blue', dbType: 'photo' },
+  documents: { label: 'Documents', icon: FileText, accent: 'accent', dbType: 'document' },
 };
 
 // Couleurs par catégorie
@@ -179,8 +54,45 @@ const ACCENT_CLASSES = {
   },
 };
 
+function mapRow(row) {
+  return {
+    title: row.title,
+    desc: row.description,
+    thumb: row.thumbnail_url,
+    date: new Date(row.published_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }),
+    featured: row.is_featured,
+    duration: row.meta?.duration,
+    count: row.meta?.count ? `${row.meta.count} photos` : '',
+    type: row.meta?.type || 'PDF',
+    size: row.meta?.size,
+    pages: row.meta?.pages,
+    fileUrl: row.file_url,
+  };
+}
+
 export default function Media() {
   const [activeId, setActiveId] = useState('videos');
+  const { data, loading } = useSupabaseTable('media_items', {
+    orderBy: 'published_at',
+    ascending: false,
+  });
+
+  if (loading) {
+    return (
+      <section id="media" className="py-24 lg:py-28 bg-gray-50">
+        <Loader fullScreen={false} label="" />
+      </section>
+    );
+  }
+
+  if (data.length === 0) return null;
+
+  const MEDIA_LIBRARY = {
+    videos: { ...CATEGORY_META.videos, items: data.filter((d) => d.media_type === 'video').map(mapRow) },
+    photos: { ...CATEGORY_META.photos, items: data.filter((d) => d.media_type === 'photo').map(mapRow) },
+    documents: { ...CATEGORY_META.documents, items: data.filter((d) => d.media_type === 'document').map(mapRow) },
+  };
+
   const active = MEDIA_LIBRARY[activeId];
   const accent = ACCENT_CLASSES[active.accent];
   const ActiveIcon = active.icon;
@@ -300,17 +212,21 @@ export default function Media() {
 
         {/* ═══════════ GRILLE DE MÉDIAS ═══════════ */}
         <div key={`grid-${activeId}`} className="animate-fade-in-up">
+          {active.items.length === 0 && (
+            <p className="text-center text-gray-400 py-16">Aucun contenu pour le moment.</p>
+          )}
+
           {/* VIDÉOS */}
-          {activeId === 'videos' && (
+          {activeId === 'videos' && active.items.length > 0 && (
             <div className="grid lg:grid-cols-12 gap-6">
               {/* Vidéo featured (large) */}
               <FeaturedVideoCard
-                item={MEDIA_LIBRARY.videos.items[0]}
+                item={active.items[0]}
                 accent={accent}
               />
-              {/* 3 vidéos secondaires */}
+              {/* vidéos secondaires */}
               <div className="lg:col-span-5 grid sm:grid-cols-1 gap-4">
-                {MEDIA_LIBRARY.videos.items.slice(1).map((v, i) => (
+                {active.items.slice(1).map((v, i) => (
                   <VideoCardSmall key={i} item={v} accent={accent} delay={i * 60} />
                 ))}
               </div>
@@ -318,18 +234,18 @@ export default function Media() {
           )}
 
           {/* PHOTOS */}
-          {activeId === 'photos' && (
+          {activeId === 'photos' && active.items.length > 0 && (
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {MEDIA_LIBRARY.photos.items.map((p, i) => (
+              {active.items.map((p, i) => (
                 <PhotoCard key={i} item={p} accent={accent} delay={i * 70} />
               ))}
             </div>
           )}
 
           {/* DOCUMENTS */}
-          {activeId === 'documents' && (
+          {activeId === 'documents' && active.items.length > 0 && (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {MEDIA_LIBRARY.documents.items.map((d, i) => (
+              {active.items.map((d, i) => (
                 <DocumentCard key={i} item={d} accent={accent} delay={i * 60} />
               ))}
             </div>
@@ -364,10 +280,12 @@ function FeaturedVideoCard({ item, accent }) {
         </div>
 
         {/* Durée */}
-        <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-black/70 backdrop-blur text-white text-xs font-bold tabular-nums">
-          <Clock size={11} />
-          {item.duration}
-        </div>
+        {item.duration && (
+          <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-black/70 backdrop-blur text-white text-xs font-bold tabular-nums">
+            <Clock size={11} />
+            {item.duration}
+          </div>
+        )}
 
         {/* Bouton play central */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -423,9 +341,11 @@ function VideoCardSmall({ item, accent, delay }) {
             />
           </div>
         </div>
-        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/70 text-white text-[10px] font-bold tabular-nums">
-          {item.duration}
-        </div>
+        {item.duration && (
+          <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/70 text-white text-[10px] font-bold tabular-nums">
+            {item.duration}
+          </div>
+        )}
       </div>
 
       <div className="flex-1 p-4 flex flex-col justify-center">
@@ -467,10 +387,12 @@ function PhotoCard({ item, accent, delay }) {
           </div>
         )}
 
-        <div className="absolute top-3 right-3 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-black/70 backdrop-blur text-white text-[10px] font-bold">
-          <ImageIcon size={10} />
-          {item.count}
-        </div>
+        {item.count && (
+          <div className="absolute top-3 right-3 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-black/70 backdrop-blur text-white text-[10px] font-bold">
+            <ImageIcon size={10} />
+            {item.count}
+          </div>
+        )}
 
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <h4 className="text-white text-sm font-bold mb-1 leading-tight line-clamp-2">
@@ -549,14 +471,18 @@ function DocumentCard({ item, accent, delay }) {
         {/* Actions */}
         <div className="flex gap-2">
           <a
-            href="#"
+            href={item.fileUrl || '#'}
+            target={item.fileUrl ? '_blank' : undefined}
+            rel={item.fileUrl ? 'noreferrer' : undefined}
             className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg ${accent.bgActive} text-white font-bold text-xs hover:opacity-90 transition-all duration-300`}
           >
             <Download size={13} />
             Télécharger
           </a>
           <a
-            href="#"
+            href={item.fileUrl || '#'}
+            target={item.fileUrl ? '_blank' : undefined}
+            rel={item.fileUrl ? 'noreferrer' : undefined}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg border border-gray-200 hover:border-gray-300 text-gray-700 font-semibold text-xs transition-all duration-300"
           >
             <Eye size={13} />

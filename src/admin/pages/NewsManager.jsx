@@ -2,16 +2,28 @@ import TopBar from '../components/TopBar';
 import { useOutletContext } from 'react-router-dom';
 import { useState } from 'react';
 import {
-  Plus, Search, Eye, Pencil, Trash2, Globe, Clock, Image,
+  Plus, Search, Eye, Pencil, Trash2, Globe, Clock, Image, X,
 } from 'lucide-react';
-import { useData } from '../context/DataContext';
+import { useSupabaseTable } from '../../hooks/useSupabaseTable';
+import { uploadFile } from '../../lib/uploadFile';
+
+const CATEGORIES = ['Inclusion Financière', 'Innovation', 'Développement', 'Formation', 'Institution', 'Événement'];
+
+const emptyForm = { title: '', category: CATEGORIES[0], excerpt: '', content: '', image_url: '' };
 
 export default function NewsManager() {
   const { collapsed, setCollapsed } = useOutletContext();
-  const { articles, setArticles } = useData();
+  const { data: articles, loading, create, update, remove } = useSupabaseTable('articles', {
+    orderBy: 'created_at',
+    ascending: false,
+  });
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [form, setForm] = useState(emptyForm);
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const filtered = articles.filter((a) => {
     const matchSearch = a.title.toLowerCase().includes(search.toLowerCase());
@@ -19,53 +31,144 @@ export default function NewsManager() {
     return matchSearch && matchStatus;
   });
 
-  const deleteArticle = (id) => setArticles(articles.filter((a) => a.id !== id));
+  const openNew = () => {
+    setEditingId(null);
+    setForm(emptyForm);
+    setShowForm(true);
+  };
+
+  const openEdit = (article) => {
+    setEditingId(article.id);
+    setForm({
+      title: article.title || '',
+      category: article.category || CATEGORIES[0],
+      excerpt: article.excerpt || '',
+      content: article.content || '',
+      image_url: article.image_url || '',
+    });
+    setShowForm(true);
+  };
+
+  const deleteArticle = async (id) => {
+    if (!confirm('Supprimer cet article ?')) return;
+    await remove(id);
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadFile(file, 'articles');
+      setForm((f) => ({ ...f, image_url: url }));
+    } catch (err) {
+      alert(`Échec de l'upload : ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const save = async (status) => {
+    if (!form.title.trim()) {
+      alert('Le titre est requis.');
+      return;
+    }
+    setSaving(true);
+    try {
+      const values = { ...form, status };
+      if (status === 'published') values.published_at = new Date().toISOString();
+      if (editingId) {
+        await update(editingId, values);
+      } else {
+        await create(values);
+      }
+      setShowForm(false);
+    } catch (err) {
+      alert(`Échec de l'enregistrement : ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   if (showForm) {
     return (
       <>
-        <TopBar title="Nouvel article" subtitle="Créer un article d'actualité" onToggleSidebar={() => setCollapsed(!collapsed)} />
+        <TopBar
+          title={editingId ? "Modifier l'article" : 'Nouvel article'}
+          subtitle="Créer un article d'actualité"
+          onToggleSidebar={() => setCollapsed(!collapsed)}
+        />
         <div className="p-6 max-w-4xl">
           <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Titre</label>
-              <input type="text" placeholder="Titre de l'article..." className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 transition-colors" />
+              <input
+                type="text"
+                placeholder="Titre de l'article..."
+                value={form.title}
+                onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 transition-colors"
+              />
             </div>
             <div className="grid grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Catégorie</label>
-                <select className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 bg-white">
-                  <option>Inclusion Financière</option>
-                  <option>Innovation</option>
-                  <option>Développement</option>
-                  <option>Formation</option>
-                  <option>Institution</option>
+                <select
+                  value={form.category}
+                  onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 bg-white"
+                >
+                  {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Statut</label>
-                <select className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 bg-white">
-                  <option>Brouillon</option>
-                  <option>Publié</option>
-                </select>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Résumé</label>
+                <input
+                  type="text"
+                  placeholder="Court résumé affiché sur le site..."
+                  value={form.excerpt}
+                  onChange={(e) => setForm((f) => ({ ...f, excerpt: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400"
+                />
               </div>
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Image de couverture</label>
-              <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-primary-300 transition-colors cursor-pointer">
-                <Image size={32} className="mx-auto text-gray-300 mb-2" />
-                <p className="text-sm text-gray-400">Glissez une image ou <span className="text-primary-600 font-medium">parcourir</span></p>
-                <p className="text-[11px] text-gray-300 mt-1">PNG, JPG jusqu'à 5 MB</p>
-              </div>
+              {form.image_url ? (
+                <div className="relative rounded-xl overflow-hidden border border-gray-200">
+                  <img src={form.image_url} alt="" className="w-full h-48 object-cover" />
+                  <button
+                    onClick={() => setForm((f) => ({ ...f, image_url: '' }))}
+                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/50 text-white hover:bg-black/70 transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : (
+                <label className="block border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-primary-300 transition-colors cursor-pointer">
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} disabled={uploading} />
+                  <Image size={32} className="mx-auto text-gray-300 mb-2" />
+                  <p className="text-sm text-gray-400">
+                    {uploading ? 'Envoi en cours...' : <>Glissez une image ou <span className="text-primary-600 font-medium">parcourir</span></>}
+                  </p>
+                  <p className="text-[11px] text-gray-300 mt-1">PNG, JPG jusqu'à 5 MB</p>
+                </label>
+              )}
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contenu</label>
-              <textarea rows={10} placeholder="Écrivez votre article ici..." className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 resize-none leading-relaxed" />
+              <textarea
+                rows={10}
+                placeholder="Écrivez votre article ici..."
+                value={form.content}
+                onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 resize-none leading-relaxed"
+              />
             </div>
             <div className="flex justify-end gap-3 pt-2">
               <button onClick={() => setShowForm(false)} className="px-5 py-2.5 text-sm text-gray-500 hover:bg-gray-100 rounded-xl transition-colors">Annuler</button>
-              <button className="px-5 py-2.5 text-sm bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition-colors font-medium">Enregistrer brouillon</button>
-              <button className="px-5 py-2.5 text-sm bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-semibold shadow-lg shadow-primary-600/15">Publier</button>
+              <button disabled={saving} onClick={() => save('draft')} className="px-5 py-2.5 text-sm bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition-colors font-medium disabled:opacity-60">Enregistrer brouillon</button>
+              <button disabled={saving} onClick={() => save('published')} className="px-5 py-2.5 text-sm bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-semibold shadow-lg shadow-primary-600/15 disabled:opacity-60">Publier</button>
             </div>
           </div>
         </div>
@@ -99,7 +202,7 @@ export default function NewsManager() {
               ))}
             </div>
           </div>
-          <button onClick={() => setShowForm(true)} className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/15">
+          <button onClick={openNew} className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/15">
             <Plus size={16} />
             Nouvel article
           </button>
@@ -119,16 +222,26 @@ export default function NewsManager() {
                 </tr>
               </thead>
               <tbody>
+                {loading && (
+                  <tr><td colSpan={5} className="px-5 py-8 text-center text-sm text-gray-400">Chargement...</td></tr>
+                )}
+                {!loading && filtered.length === 0 && (
+                  <tr><td colSpan={5} className="px-5 py-8 text-center text-sm text-gray-400">Aucun article</td></tr>
+                )}
                 {filtered.map((article) => (
                   <tr key={article.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors group">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${article.image ? 'bg-primary-50' : 'bg-gray-50'}`}>
-                          <Image size={16} className={article.image ? 'text-primary-400' : 'text-gray-300'} />
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${article.image_url ? 'bg-primary-50' : 'bg-gray-50'}`}>
+                          {article.image_url ? (
+                            <img src={article.image_url} alt="" className="w-full h-full object-cover rounded-lg" />
+                          ) : (
+                            <Image size={16} className="text-gray-300" />
+                          )}
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-dark truncate max-w-xs">{article.title}</p>
-                          <p className="text-[11px] text-gray-400">{article.author}</p>
+                          <p className="text-[11px] text-gray-400">{article.author || '—'}</p>
                         </div>
                       </div>
                     </td>
@@ -143,11 +256,13 @@ export default function NewsManager() {
                         {article.status === 'published' ? 'Publié' : 'Brouillon'}
                       </span>
                     </td>
-                    <td className="px-5 py-4 text-sm text-gray-400 hidden md:table-cell">{article.date}</td>
+                    <td className="px-5 py-4 text-sm text-gray-400 hidden md:table-cell">
+                      {new Date(article.created_at).toLocaleDateString('fr-FR')}
+                    </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center justify-end gap-1">
                         <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-primary-600 transition-colors"><Eye size={15} /></button>
-                        <button onClick={() => setShowForm(true)} className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-primary-600 transition-colors"><Pencil size={15} /></button>
+                        <button onClick={() => openEdit(article)} className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-primary-600 transition-colors"><Pencil size={15} /></button>
                         <button onClick={() => deleteArticle(article.id)} className="p-2 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"><Trash2 size={15} /></button>
                       </div>
                     </td>

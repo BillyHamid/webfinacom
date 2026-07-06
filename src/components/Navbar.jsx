@@ -51,9 +51,9 @@ export default function Navbar() {
             >
               <div className="relative">
                 <img
-                  src="/logo-finacom.png"
+                  src="/logo-finacom-removebg-preview.png"
                   alt="FINACOM"
-                  className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+                  className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
               <div className="hidden sm:block">
