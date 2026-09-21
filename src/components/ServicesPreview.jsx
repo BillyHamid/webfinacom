@@ -17,6 +17,7 @@ import { usePageContent } from '../hooks/usePageContent';
 // 4 familles avec photos thématiques en lien direct avec les offres
 const CATEGORIES = [
   {
+    id: 'epargne',
     icon: PiggyBank,
     kicker: 'Épargner',
     name: "Produits d'épargne",
@@ -29,6 +30,7 @@ const CATEGORIES = [
     accentRgb: 'rgba(27,122,61,',
   },
   {
+    id: 'credit',
     icon: HandCoins,
     kicker: 'Financer',
     name: 'Produits de crédit',
@@ -41,6 +43,7 @@ const CATEGORIES = [
     accentRgb: 'rgba(212,160,23,',
   },
   {
+    id: 'digital',
     icon: Smartphone,
     kicker: 'Vivre digital',
     name: 'Services digitaux',
@@ -53,6 +56,7 @@ const CATEGORIES = [
     featured: true,
   },
   {
+    id: 'rattaches',
     icon: Briefcase,
     kicker: 'Simplifier',
     name: 'Services rattachés',
@@ -100,7 +104,7 @@ export default function ServicesPreview() {
             return (
               <Link
                 key={cat.name}
-                to="/produits-et-services"
+                to={`/produits-et-services?cat=${cat.id}`}
                 className="group relative aspect-[4/5] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-fade-in-up"
                 style={{ animationDelay: `${i * 150}ms` }}
               >

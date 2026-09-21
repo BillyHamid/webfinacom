@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   PiggyBank,
   HandCoins,
@@ -244,10 +245,23 @@ const ACCENT_CLASSES = {
 
 export default function Services() {
   const { text } = usePageContent('services');
-  const [activeId, setActiveId] = useState(CATEGORIES[0].id);
+  const [searchParams] = useSearchParams();
+  const requestedCat = searchParams.get('cat');
+  const [activeId, setActiveId] = useState(
+    CATEGORIES.some((c) => c.id === requestedCat) ? requestedCat : CATEGORIES[0].id
+  );
   const activeCategory = CATEGORIES.find((c) => c.id === activeId);
   const activeAccent = ACCENT_CLASSES[activeCategory.accent];
   const ActiveIcon = activeCategory.icon;
+
+  // Arrivée depuis "Découvrir" sur l'accueil : on va directement à cette
+  // catégorie dans la section, sans repartir du haut de la page.
+  useEffect(() => {
+    if (!requestedCat) return;
+    const section = document.getElementById('services');
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <section id="services" className="py-16 sm:py-20 lg:py-28 bg-white relative overflow-hidden">

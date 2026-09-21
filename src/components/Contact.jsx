@@ -180,7 +180,7 @@ export default function Contact() {
                         <div className="text-white/60 text-[11px] uppercase tracking-wider mb-0.5">
                           Horaires
                         </div>
-                        <div className="text-white font-medium">Lun–Ven · 7h30–17h00</div>
+                        <div className="text-white font-medium">Lun–Ven · 7h30–16h00</div>
                         <div className="text-white/60 text-xs">Sam · 7h30–12h00</div>
                       </div>
                     </div>
