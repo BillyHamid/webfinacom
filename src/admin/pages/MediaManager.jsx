@@ -6,6 +6,15 @@ import {
 } from 'lucide-react';
 import { useSupabaseTable } from '../../hooks/useSupabaseTable';
 import { uploadFile } from '../../lib/uploadFile';
+import { compressImage } from '../../lib/compressImage';
+
+const UPLOAD_TIMEOUT_MS = 45000; // ne reste jamais bloqué sur "Envoi..." indéfiniment
+function withTimeout(promise, ms, message) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms)),
+  ]);
+}
 
 const TYPES = [
   { value: 'video', label: 'Vidéos', icon: Video },
@@ -69,10 +78,17 @@ export default function MediaManager() {
     if (!file) return;
     setUploadingThumb(true);
     try {
-      const url = await uploadFile(file, 'media/thumbnails');
+      // Redimensionne/recompresse côté navigateur — évite les envois
+      // interminables avec des photos brutes de plusieurs Mo.
+      const compressed = await compressImage(file);
+      const url = await withTimeout(
+        uploadFile(compressed, 'media/thumbnails'),
+        UPLOAD_TIMEOUT_MS,
+        "L'envoi prend trop de temps (connexion lente ?). Réessaie."
+      );
       setForm((f) => ({ ...f, thumbnail_url: url }));
     } catch (err) {
-      alert(`Échec de l'upload : ${err.message}`);
+      alert(`Échec de l'upload : ${err.message || 'erreur inconnue — vérifie ta connexion et réessaie.'}`);
     } finally {
       setUploadingThumb(false);
     }
@@ -83,12 +99,16 @@ export default function MediaManager() {
     if (!file) return;
     setUploadingFile(true);
     try {
-      const url = await uploadFile(file, 'media/files');
+      const url = await withTimeout(
+        uploadFile(file, 'media/files'),
+        UPLOAD_TIMEOUT_MS,
+        "L'envoi prend trop de temps (connexion lente ?). Réessaie."
+      );
       const sizeKo = file.size / 1024;
       const size = sizeKo > 1024 ? `${(sizeKo / 1024).toFixed(1)} Mo` : `${Math.round(sizeKo)} Ko`;
       setForm((f) => ({ ...f, file_url: url, doc_size: f.doc_size || size }));
     } catch (err) {
-      alert(`Échec de l'upload : ${err.message}`);
+      alert(`Échec de l'upload : ${err.message || 'erreur inconnue — vérifie ta connexion et réessaie.'}`);
     } finally {
       setUploadingFile(false);
     }
