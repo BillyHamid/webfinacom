@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
 import { usePageContent } from '../hooks/usePageContent';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 // Vidéo Pexels #13020377 — "People working on rice field"
 // Africains travaillant ensemble dans une rizière — incarne parfaitement
@@ -11,6 +12,8 @@ const HERO_VIDEO_URL =
 
 export default function CTABanner() {
   const { text } = usePageContent('home');
+  const { general } = useSiteSettings();
+  const phoneHref = `tel:${general.phone.replace(/[^+\d]/g, '')}`;
   const videoRef = useRef(null);
   const [videoReady, setVideoReady] = useState(false);
 
@@ -110,7 +113,7 @@ export default function CTABanner() {
               />
             </a>
             <a
-              href="tel:+22625000000"
+              href={phoneHref}
               className="inline-flex items-center justify-center gap-2.5 px-10 py-4.5 rounded-xl glass text-white font-semibold text-base transition-all duration-300 hover:bg-white/15 hover:-translate-y-0.5"
             >
               Appelez-nous maintenant
