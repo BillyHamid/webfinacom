@@ -13,6 +13,7 @@ import ContactPage from './pages/ContactPage';
 import ScrollToTop from './components/ScrollToTop';
 import Loader from './components/Loader';
 import VisitTracker from './components/VisitTracker';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Admin CMS
 import AdminLayout from './admin/AdminLayout';
@@ -47,37 +48,39 @@ export default function App() {
       <ScrollToTop />
       <VisitTracker />
       <AuthProvider>
-        <Routes>
-          {/* Site public — une page par rubrique */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/a-propos" element={<AboutPage />} />
-          <Route path="/produits-et-services" element={<ServicesPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/mediatheque" element={<MediaPage />} />
-          <Route path="/contact" element={<ContactPage />} />
+        <ErrorBoundary>
+          <Routes>
+            {/* Site public — une page par rubrique */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/a-propos" element={<AboutPage />} />
+            <Route path="/produits-et-services" element={<ServicesPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/mediatheque" element={<MediaPage />} />
+            <Route path="/contact" element={<ContactPage />} />
 
-          {/* Admin CMS */}
-          <Route path="/admin/login" element={<Login />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <AdminLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="content/home" element={<HomeContentManager />} />
-            <Route path="pages" element={<PagesManager />} />
-            <Route path="news" element={<NewsManager />} />
-            <Route path="events" element={<EventsManager />} />
-            <Route path="media" element={<MediaManager />} />
-            <Route path="testimonials" element={<TestimonialsManager />} />
-            <Route path="partners" element={<PartnersManager />} />
-            <Route path="metrics" element={<MetricsManager />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Route>
-        </Routes>
+            {/* Admin CMS */}
+            <Route path="/admin/login" element={<Login />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="content/home" element={<HomeContentManager />} />
+              <Route path="pages" element={<PagesManager />} />
+              <Route path="news" element={<NewsManager />} />
+              <Route path="events" element={<EventsManager />} />
+              <Route path="media" element={<MediaManager />} />
+              <Route path="testimonials" element={<TestimonialsManager />} />
+              <Route path="partners" element={<PartnersManager />} />
+              <Route path="metrics" element={<MetricsManager />} />
+              <Route path="settings" element={<SettingsPage />} />
+            </Route>
+          </Routes>
+        </ErrorBoundary>
       </AuthProvider>
     </BrowserRouter>
   );
