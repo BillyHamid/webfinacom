@@ -4,7 +4,18 @@ import { useEffect, useState } from 'react';
 import { Save, Sparkles, Info, Image as ImageIcon, Loader2, X } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
 import { uploadFile } from '../../lib/uploadFile';
+import { compressImage } from '../../lib/compressImage';
 import { PAGE_CONTENT_SCHEMA } from '../../lib/pageContentSchema';
+
+const MAX_ORIGINAL_SIZE = 40 * 1024 * 1024; // 40 Mo — au-delà, la compression navigateur devient trop lente/instable
+const UPLOAD_TIMEOUT_MS = 45000; // filet de sécurité : ne reste jamais bloqué sur "Envoi..." indéfiniment
+
+function withTimeout(promise, ms, message) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms)),
+  ]);
+}
 
 export default function PageContentManager() {
   const { collapsed, setCollapsed } = useOutletContext();
@@ -43,12 +54,26 @@ export default function PageContentManager() {
 
   const handleImageChange = async (key, file) => {
     if (!file) return;
+    if (file.size > MAX_ORIGINAL_SIZE) {
+      alert(
+        `Cette photo est trop lourde (${(file.size / 1024 / 1024).toFixed(1)} Mo). Choisis-en une de moins de 40 Mo, idéalement une photo déjà exportée depuis ton téléphone plutôt qu'un fichier appareil photo brut.`
+      );
+      return;
+    }
     setUploadingKey(key);
     try {
-      const url = await uploadFile(file, `pages/${activePage}`);
+      // Redimensionne/recompresse côté navigateur avant l'envoi — évite les
+      // envois interminables (ou qui restent bloqués sans erreur) avec des
+      // photos brutes de plusieurs Mo, en particulier sur connexion lente.
+      const compressed = await compressImage(file);
+      const url = await withTimeout(
+        uploadFile(compressed, `pages/${activePage}`),
+        UPLOAD_TIMEOUT_MS,
+        "L'envoi prend trop de temps (connexion lente ?). Réessaie, idéalement avec un meilleur réseau."
+      );
       setField(key, url);
     } catch (err) {
-      alert(`Échec de l'envoi de l'image : ${err.message}`);
+      alert(`Échec de l'envoi de l'image : ${err.message || 'erreur inconnue — vérifie ta connexion et réessaie.'}`);
     } finally {
       setUploadingKey(null);
     }
