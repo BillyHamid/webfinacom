@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
 import SectionKicker from './SectionKicker';
+import { usePageContent } from '../hooks/usePageContent';
 
 // 4 familles avec photos thématiques en lien direct avec les offres
 const CATEGORIES = [
@@ -76,6 +77,7 @@ const FEATURED_NAMES = [
 ];
 
 export default function ServicesPreview() {
+  const { text } = usePageContent('home');
   return (
     <section id="services" className="py-20 lg:py-24 bg-gray-50 relative overflow-hidden">
       {/* Décor */}
@@ -87,8 +89,7 @@ export default function ServicesPreview() {
         <RevealOnScroll className="text-center max-w-3xl mx-auto mb-14">
           <SectionKicker icon={Zap} label="Nos produits et services" accent="primary" />
           <h2 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
-            Une offre structurée en{' '}
-            <span className="text-gradient-green">4 familles</span>.
+            {text('services_heading', 'Une offre structurée en 4 familles.')}
           </h2>
         </RevealOnScroll>
 

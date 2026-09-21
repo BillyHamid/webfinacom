@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
+import { usePageContent } from '../hooks/usePageContent';
 
 // Vidéo Pexels #13020377 — "People working on rice field"
 // Africains travaillant ensemble dans une rizière — incarne parfaitement
@@ -9,6 +10,7 @@ const HERO_VIDEO_URL =
   'https://videos.pexels.com/video-files/13020377/13020377-hd_1280_720_30fps.mp4';
 
 export default function CTABanner() {
+  const { text } = usePageContent('home');
   const videoRef = useRef(null);
   const [videoReady, setVideoReady] = useState(false);
 
@@ -81,19 +83,19 @@ export default function CTABanner() {
           <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium mb-10">
             <Sparkles size={14} className="text-accent-400" />
             <span className="text-white/70">
-              Rejoignez plus de 50 000 clients satisfaits
+              {text('cta_badge', 'Rejoignez plus de 50 000 clients satisfaits')}
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-extrabold text-white leading-[1.1] mb-7 tracking-tight">
-            Ensemble, construisons votre{' '}
-            <span className="text-gradient-gold">avenir financier</span>
+            {text('cta_heading', 'Ensemble, construisons votre avenir financier')}
           </h2>
 
           <p className="text-base sm:text-lg text-white/70 leading-relaxed mb-12 max-w-2xl mx-auto">
-            Que vous soyez un particulier, un entrepreneur ou une association,
-            FINACOM a la solution qu'il vous faut. Ouvrez votre compte dès
-            aujourd'hui et rejoignez notre communauté.
+            {text(
+              'cta_body',
+              "Que vous soyez un particulier, un entrepreneur ou une association, FINACOM a la solution qu'il vous faut. Ouvrez votre compte dès aujourd'hui et rejoignez notre communauté."
+            )}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -11,7 +11,9 @@ import { Link } from 'react-router-dom';
  * - highlight   : mot accentué doré dans le titre
  * - description : sous-titre / lede
  * - breadcrumb  : libellé de la page courante dans le fil d'ariane
- * - imageUrl    : URL d'une photo de fond (full-bleed avec overlay vert)
+ * - imageUrl    : URL d'une photo de fond unique (full-bleed avec overlay vert)
+ * - images      : tableau d'URLs — si fourni (2+), affiche un carrousel en fondu
+ *                 enchaîné à la place d'une image fixe (prioritaire sur imageUrl)
  * - children    : contenu optionnel à droite (badges, illustration, etc.)
  */
 export default function MiniHero({
@@ -21,9 +23,12 @@ export default function MiniHero({
   description,
   breadcrumb,
   imageUrl,
+  images,
   children,
 }) {
   const [zoomed, setZoomed] = useState(false);
+  const slides = images && images.length > 0 ? images : imageUrl ? [imageUrl] : [];
+  const [activeSlide, setActiveSlide] = useState(0);
 
   // Déclenche le Ken Burns au montage
   useEffect(() => {
@@ -31,33 +36,67 @@ export default function MiniHero({
     return () => clearTimeout(t);
   }, []);
 
+  // Rotation automatique du carrousel (si plusieurs images) — le minuteur
+  // redémarre à chaque changement de slide, y compris un clic manuel sur une puce.
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const timeout = setTimeout(() => {
+      setActiveSlide((i) => (i + 1) % slides.length);
+    }, 5000);
+    return () => clearTimeout(timeout);
+  }, [slides.length, activeSlide]);
+
   return (
     <section className="relative pt-28 sm:pt-32 lg:pt-44 pb-16 sm:pb-20 lg:pb-32 bg-primary-900 overflow-hidden min-h-[320px] sm:min-h-[420px] lg:min-h-[520px]">
-      {/* ── Photo de fond (si fournie) avec Ken Burns ── */}
-      {imageUrl && (
+      {/* ── Photo(s) de fond avec Ken Burns / fondu enchaîné ── */}
+      {slides.length > 0 && (
         <div className="absolute inset-0">
-          <img
-            src={imageUrl}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="eager"
-            style={{
-              transform: zoomed ? 'scale(1.12)' : 'scale(1)',
-              transition: 'transform 18000ms cubic-bezier(0.22, 1, 0.36, 1)',
-            }}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
+          {slides.map((src, i) => (
+            <img
+              key={src}
+              src={src}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              style={{
+                opacity: i === activeSlide ? 1 : 0,
+                transition: 'opacity 1200ms ease-in-out',
+                transform: zoomed ? 'scale(1.12)' : 'scale(1)',
+                transitionProperty: 'opacity, transform',
+                transitionDuration: '1200ms, 18000ms',
+                transitionTimingFunction: 'ease-in-out, cubic-bezier(0.22, 1, 0.36, 1)',
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          ))}
           {/* Voile sombre — uniquement pour la lisibilité du texte (pas de teinte verte) */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/10" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+          {/* Puces de navigation du carrousel */}
+          {slides.length > 1 && (
+            <div className="absolute bottom-5 right-5 sm:bottom-6 sm:right-8 z-10 flex gap-2">
+              {slides.map((src, i) => (
+                <button
+                  key={src}
+                  type="button"
+                  aria-label={`Afficher la photo ${i + 1}`}
+                  onClick={() => setActiveSlide(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === activeSlide ? 'w-6 bg-accent-400' : 'w-1.5 bg-white/40 hover:bg-white/60'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
       {/* ── Décors radials/grille — seulement si pas d'image ── */}
-      {!imageUrl && (
+      {slides.length === 0 && (
         <>
           <div
             className="absolute inset-0 pointer-events-none"

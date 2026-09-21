@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
+import { usePageContent } from '../hooks/usePageContent';
 
 const HERO_IMAGE = '/hero-about.jpg';
 
@@ -8,6 +9,7 @@ const ROTATING_WORDS = ['projets,', 'rêves,', 'ambitions,', 'commerces,'];
 const WORD_DURATION = 2800; // ms
 
 export default function HeroEditorial() {
+  const { text } = usePageContent('home');
   const [loaded, setLoaded] = useState(false);
   const [wordIdx, setWordIdx] = useState(0);
 
@@ -83,7 +85,7 @@ export default function HeroEditorial() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-400" />
             </span>
             <span className="text-accent-400 text-[11px] uppercase tracking-[0.35em] font-bold">
-              Microfinance moderne · Burkina Faso
+              {text('hero_kicker', 'Microfinance moderne · Burkina Faso')}
             </span>
           </div>
 
@@ -213,10 +215,10 @@ export default function HeroEditorial() {
                     'opacity 800ms ease-out 1200ms, transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 1200ms',
                 }}
               >
-                Chaque franc épargné. Chaque crédit accordé. Chaque commerce
-                financé. <span className="text-accent-400 font-semibold">FINACOM</span>{' '}
-                accompagne les Burkinabè vers l'autonomie financière depuis
-                plus de 50 ans.
+                {text(
+                  'hero_body',
+                  "Chaque franc épargné. Chaque crédit accordé. Chaque commerce financé. FINACOM accompagne les Burkinabè vers l'autonomie financière."
+                )}
               </p>
             </div>
             <div className="lg:col-span-4 lg:col-start-9 hidden lg:flex items-end">
@@ -229,8 +231,7 @@ export default function HeroEditorial() {
                     'opacity 800ms ease-out 1400ms, transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 1400ms',
                 }}
               >
-                « Une institution de microfinance moderne au service du
-                développement. »
+                « {text('hero_quote', 'Une institution de microfinance moderne au service du développement.')} »
               </div>
             </div>
           </div>

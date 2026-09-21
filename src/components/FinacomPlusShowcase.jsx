@@ -9,6 +9,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
+import { usePageContent } from '../hooks/usePageContent';
 
 const FEATURES = [
   {
@@ -34,6 +35,7 @@ const FEATURES = [
 ];
 
 export default function FinacomPlusShowcase() {
+  const { text } = usePageContent('home');
   return (
     <section className="py-20 lg:py-28 bg-gradient-to-br from-gray-50 via-white to-primary-50/30 relative overflow-hidden">
       {/* Décor */}
@@ -143,20 +145,20 @@ export default function FinacomPlusShowcase() {
                 className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-accent-100 shadow-sm text-accent-700 text-[13px] font-extrabold uppercase tracking-[0.18em] mb-6 animate-kicker"
               >
                 <Zap size={15} />
-                100% Digital
+                {text('digital_kicker', '100% Digital')}
               </div>
 
               {/* Titre */}
               <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
-                Votre banque dans{' '}
-                <span className="text-primary-700">votre poche</span>.
+                {text('digital_heading', 'Votre banque dans votre poche.')}
               </h2>
 
               {/* Description */}
               <p className="text-gray-600 text-base lg:text-lg leading-relaxed mb-8 max-w-xl">
-                Accédez à vos comptes, effectuez vos virements et payez vos
-                factures depuis votre smartphone ou votre ordinateur.{' '}
-                <strong className="text-dark">Simple, rapide, sécurisé.</strong>
+                {text(
+                  'digital_body',
+                  'Accédez à vos comptes, effectuez vos virements et payez vos factures depuis votre smartphone ou votre ordinateur. Simple, rapide, sécurisé.'
+                )}
               </p>
             </RevealOnScroll>
 

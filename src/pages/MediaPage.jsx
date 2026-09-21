@@ -13,7 +13,7 @@ export default function MediaPage() {
         highlight="en images"
         description="Vidéos institutionnelles, reportages photos et documents officiels — toutes les ressources pour mieux connaître FINACOM."
         breadcrumb="Médiathèque"
-        imageUrl="https://images.unsplash.com/photo-1618142134777-233c1c07d32c?auto=format&fit=crop&w=2000&q=80"
+        imageUrl="/hero-media.jpg"
       />
       <Media />
       <Footer />

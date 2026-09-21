@@ -12,9 +12,9 @@ export default function AboutPage() {
         kicker="Notre identité"
         title="Une finance proche, moderne et"
         highlight="durable"
-        description="Découvrez l'histoire, la mission et les valeurs qui guident l'engagement de FINACOM auprès des communautés burkinabè depuis plus de 50 ans."
+        description="Découvrez l'histoire, la mission et les valeurs qui guident l'engagement de FINACOM auprès des communautés burkinabè."
         breadcrumb="À propos"
-        imageUrl="/hero-about.jpg"
+        images={['/about-hero-team.jpg', '/hero-about-2.jpg']}
       />
       <About />
 

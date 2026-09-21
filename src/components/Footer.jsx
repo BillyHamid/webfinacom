@@ -75,7 +75,7 @@ export default function Footer() {
 
             <p className="text-white/50 text-sm leading-relaxed mb-5 max-w-sm">
               Institution de microfinance moderne, agréée BCEAO. Branche financière
-              de la FEME, au service du développement burkinabè depuis plus de 50 ans.
+              de la FEME, au service du développement burkinabè.
             </p>
 
             {/* Coordonnées compactes */}

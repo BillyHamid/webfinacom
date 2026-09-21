@@ -12,10 +12,12 @@ import ContactPage from './pages/ContactPage';
 // Utilitaires
 import ScrollToTop from './components/ScrollToTop';
 import Loader from './components/Loader';
+import VisitTracker from './components/VisitTracker';
 
 // Admin CMS
 import AdminLayout from './admin/AdminLayout';
 import Dashboard from './admin/pages/Dashboard';
+import HomeContentManager from './admin/pages/HomeContentManager';
 import PagesManager from './admin/pages/PagesManager';
 import NewsManager from './admin/pages/NewsManager';
 import EventsManager from './admin/pages/EventsManager';
@@ -43,6 +45,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <VisitTracker />
       <AuthProvider>
         <Routes>
           {/* Site public — une page par rubrique */}
@@ -64,6 +67,7 @@ export default function App() {
             }
           >
             <Route index element={<Dashboard />} />
+            <Route path="content/home" element={<HomeContentManager />} />
             <Route path="pages" element={<PagesManager />} />
             <Route path="news" element={<NewsManager />} />
             <Route path="events" element={<EventsManager />} />

@@ -1,9 +1,10 @@
 import TopBar from '../components/TopBar';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useSupabaseTable } from '../../hooks/useSupabaseTable';
+import { useVisitStats } from '../../hooks/useVisitStats';
 import {
   FileText, CalendarDays, Newspaper, Clock,
-  Activity, ArrowUpRight, Globe, PenLine, MapPin, Tag,
+  Activity, ArrowUpRight, Globe, PenLine, MapPin, Tag, Eye,
 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -35,6 +36,7 @@ export default function Dashboard() {
   const { data: articles } = useSupabaseTable('articles', { orderBy: 'created_at', ascending: false });
   const { data: events } = useSupabaseTable('events', { orderBy: 'event_date', ascending: true });
   const { data: pages } = useSupabaseTable('pages', { orderBy: 'updated_at', ascending: false });
+  const visits = useVisitStats();
 
   // --- Indicateurs calculés depuis les vraies données ---
   const publishedArticles = articles.filter((a) => a.status === 'published').length;
@@ -46,6 +48,17 @@ export default function Dashboard() {
   const totalDrafts = draftArticles + pages.filter((p) => p.status === 'draft').length;
 
   const stats = [
+    {
+      label: 'Pages vues',
+      value: visits.loading ? '…' : visits.month,
+      suffix: 'ce mois-ci',
+      change: visits.loading ? '' : `${visits.today} aujourd'hui`,
+      up: true,
+      icon: Eye,
+      color: 'text-emerald-600',
+      bg: 'bg-emerald-50',
+      path: null,
+    },
     {
       label: 'Articles publiés',
       value: publishedArticles,
@@ -153,22 +166,25 @@ export default function Dashboard() {
 
       <div className="p-6 space-y-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5">
           {stats.map((stat) => {
             const Icon = stat.icon;
+            const Wrapper = stat.path ? 'button' : 'div';
             return (
-              <button
+              <Wrapper
                 key={stat.label}
-                onClick={() => navigate(stat.path)}
+                {...(stat.path ? { onClick: () => navigate(stat.path) } : {})}
                 className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-lg hover:shadow-gray-100 hover:border-gray-200 transition-all duration-300 group text-left w-full"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-11 h-11 rounded-xl ${stat.bg} flex items-center justify-center transition-transform group-hover:scale-110`}>
                     <Icon size={20} className={stat.color} />
                   </div>
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${stat.up ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
-                    {stat.change}
-                  </span>
+                  {stat.change && (
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${stat.up ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
+                      {stat.change}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-end gap-1.5">
                   <span className="text-3xl font-extrabold text-dark tracking-tight leading-none">{stat.value}</span>
@@ -176,9 +192,9 @@ export default function Dashboard() {
                 </div>
                 <div className="flex items-center justify-between mt-1.5">
                   <span className="text-xs text-gray-400">{stat.label}</span>
-                  <ArrowUpRight size={13} className="text-gray-300 group-hover:text-primary-500 transition-colors" />
+                  {stat.path && <ArrowUpRight size={13} className="text-gray-300 group-hover:text-primary-500 transition-colors" />}
                 </div>
-              </button>
+              </Wrapper>
             );
           })}
         </div>

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
 import SectionKicker from './SectionKicker';
+import { usePageContent } from '../hooks/usePageContent';
 
 // Aperçu compact des valeurs (3 chips)
 const VALUES = [
@@ -18,6 +19,7 @@ const VALUES = [
 ];
 
 export default function AboutPreview() {
+  const { text } = usePageContent('home');
   return (
     <section id="about" className="py-20 lg:py-24 bg-gray-50 relative overflow-hidden">
       {/* Décor */}
@@ -53,15 +55,10 @@ export default function AboutPreview() {
                   strokeWidth={2.5}
                 />
                 <p className="text-xs sm:text-sm text-dark font-semibold italic leading-snug">
-                  « Une institution de microfinance moderne au service du développement. »
+                  « {text('about_quote', 'Une institution de microfinance moderne au service du développement.')} »
                 </p>
               </div>
 
-              {/* Badge expérience */}
-              <div className="absolute -top-3 left-2 sm:-top-4 sm:-left-4 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-primary-700 text-white shadow-xl">
-                <div className="text-xl sm:text-2xl font-extrabold text-accent-400 leading-none">50+</div>
-                <div className="text-[9px] sm:text-[10px] text-white/70 mt-0.5">Années · ODE</div>
-              </div>
             </div>
           </RevealOnScroll>
 
@@ -70,15 +67,13 @@ export default function AboutPreview() {
             <RevealOnScroll>
               <SectionKicker icon={Sparkles} label="À propos de FINACOM" accent="primary" />
               <h2 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
-                Une finance{' '}
-                <span className="text-gradient-green">proche, moderne</span> et durable.
+                {text('about_heading', 'Une finance proche, moderne et durable.')}
               </h2>
               <p className="text-gray-600 text-base lg:text-lg leading-relaxed mb-8">
-                Depuis 1972 via l'<strong className="text-dark">ODE</strong>, et aujourd'hui
-                en tant que branche financière de la <strong className="text-dark">FEME</strong>,
-                FINACOM accompagne chaque Burkinabè — <strong className="text-dark">urbain
-                comme rural</strong> — vers de meilleures conditions de vie grâce à
-                des solutions d'épargne et de crédit modernes.
+                {text(
+                  'about_body',
+                  "Depuis 1972 via l'ODE, et aujourd'hui en tant que branche financière de la FEME, FINACOM accompagne chaque Burkinabè — urbain comme rural — vers de meilleures conditions de vie grâce à des solutions d'épargne et de crédit modernes."
+                )}
               </p>
             </RevealOnScroll>
 

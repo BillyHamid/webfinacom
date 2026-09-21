@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Photos sources brutes (non compressées) — matière première pour recadrer
+# les images du site, jamais servies telles quelles. Restent en local.
+/source-photos
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

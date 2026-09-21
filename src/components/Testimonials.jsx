@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Quote, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
 import { useSupabaseTable } from '../hooks/useSupabaseTable';
+import { usePageContent } from '../hooks/usePageContent';
 import Loader from './Loader';
 
 export default function Testimonials() {
   const [active, setActive] = useState(0);
   const { data: testimonials, loading } = useSupabaseTable('testimonials', { orderBy: 'sort_order' });
+  const { text } = usePageContent('home');
 
   if (loading) {
     return (
@@ -33,12 +35,13 @@ export default function Testimonials() {
             Témoignages
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
-            Ce que disent{' '}
-            <span className="text-gradient-green">nos clients</span>
+            {text('testimonials_heading', 'Ce que disent nos clients')}
           </h2>
           <p className="text-gray-400 text-base sm:text-lg">
-            Découvrez les témoignages de ceux qui ont fait confiance à FINACOM
-            pour concrétiser leurs projets.
+            {text(
+              'testimonials_body',
+              'Découvrez les témoignages de ceux qui ont fait confiance à FINACOM pour concrétiser leurs projets.'
+            )}
           </p>
         </RevealOnScroll>
 

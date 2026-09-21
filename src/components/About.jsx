@@ -176,14 +176,14 @@ export default function About() {
                   <div className="space-y-4">
                     <div className="rounded-2xl overflow-hidden shadow-lg h-48">
                       <img
-                        src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=300&fit=crop"
+                        src="/about-team.jpg"
                         alt="Équipe FINACOM"
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                       />
                     </div>
                     <div className="rounded-2xl overflow-hidden shadow-lg h-64">
                       <img
-                        src="https://images.unsplash.com/photo-1556740758-90de940a6ed6?w=400&h=400&fit=crop"
+                        src="/about-service-client.jpg"
                         alt="Service client"
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                       />
@@ -192,14 +192,14 @@ export default function About() {
                   <div className="space-y-4 pt-8">
                     <div className="rounded-2xl overflow-hidden shadow-lg h-64">
                       <img
-                        src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop"
+                        src="/about-accompagnement.jpg"
                         alt="Accompagnement"
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                       />
                     </div>
                     <div className="rounded-2xl overflow-hidden shadow-lg h-48">
                       <img
-                        src="https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=400&h=300&fit=crop"
+                        src="/about-communaute.jpg"
                         alt="Communauté"
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                       />
