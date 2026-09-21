@@ -3,16 +3,21 @@ import MiniHero from '../components/MiniHero';
 import About from '../components/About';
 import VideoText from '../components/VideoText';
 import Footer from '../components/Footer';
+import { usePageContent } from '../hooks/usePageContent';
 
 export default function AboutPage() {
+  const { text } = usePageContent('about');
   return (
     <div className="min-h-screen bg-white antialiased">
       <Navbar />
       <MiniHero
-        kicker="Notre identité"
-        title="Une finance proche, moderne et"
-        highlight="durable"
-        description="Découvrez l'histoire, la mission et les valeurs qui guident l'engagement de FINACOM auprès des communautés burkinabè."
+        kicker={text('hero_kicker', 'Notre identité')}
+        title={text('hero_title', 'Une finance proche, moderne et')}
+        highlight={text('hero_highlight', 'durable')}
+        description={text(
+          'hero_description',
+          "Découvrez l'histoire, la mission et les valeurs qui guident l'engagement de FINACOM auprès des communautés burkinabè."
+        )}
         breadcrumb="À propos"
         images={['/about-hero-team.jpg', '/hero-about-2.jpg']}
       />

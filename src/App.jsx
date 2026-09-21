@@ -18,7 +18,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 // Admin CMS
 import AdminLayout from './admin/AdminLayout';
 import Dashboard from './admin/pages/Dashboard';
-import HomeContentManager from './admin/pages/HomeContentManager';
+import PageContentManager from './admin/pages/PageContentManager';
 import PagesManager from './admin/pages/PagesManager';
 import NewsManager from './admin/pages/NewsManager';
 import EventsManager from './admin/pages/EventsManager';
@@ -69,7 +69,7 @@ export default function App() {
               }
             >
               <Route index element={<Dashboard />} />
-              <Route path="content/home" element={<HomeContentManager />} />
+              <Route path="content" element={<PageContentManager />} />
               <Route path="pages" element={<PagesManager />} />
               <Route path="news" element={<NewsManager />} />
               <Route path="events" element={<EventsManager />} />

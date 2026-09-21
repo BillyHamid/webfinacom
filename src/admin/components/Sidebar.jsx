@@ -6,7 +6,7 @@ import {
 
 const navItems = [
   { label: 'Tableau de bord', icon: LayoutDashboard, path: '/admin' },
-  { label: 'Contenu — Accueil', icon: Home, path: '/admin/content/home' },
+  { label: 'Contenu des pages', icon: Home, path: '/admin/content' },
   { label: 'Pages', icon: FileText, path: '/admin/pages' },
   { label: 'Actualités', icon: Newspaper, path: '/admin/news' },
   { label: 'Événements', icon: CalendarDays, path: '/admin/events' },

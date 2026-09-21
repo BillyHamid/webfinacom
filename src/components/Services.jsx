@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import { RevealOnScroll, StaggerChildren } from '../hooks/useScrollReveal';
 import SectionKicker from './SectionKicker';
+import { usePageContent } from '../hooks/usePageContent';
 
 // ─── TAXONOMIE COMPLÈTE — 4 catégories produits & services ──────────
 const CATEGORIES = [
@@ -242,6 +243,7 @@ const ACCENT_CLASSES = {
 };
 
 export default function Services() {
+  const { text } = usePageContent('services');
   const [activeId, setActiveId] = useState(CATEGORIES[0].id);
   const activeCategory = CATEGORIES.find((c) => c.id === activeId);
   const activeAccent = ACCENT_CLASSES[activeCategory.accent];
@@ -263,11 +265,13 @@ export default function Services() {
         <RevealOnScroll className="text-center max-w-3xl mx-auto mb-16">
           <SectionKicker icon={Zap} label="Nos produits et services" accent="primary" />
           <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
-            Une offre complète, <span className="text-gradient-green">au service de vos projets</span>.
+            {text('intro_heading', 'Une offre complète, au service de vos projets.')}
           </h2>
           <p className="text-gray-500 text-base sm:text-lg leading-relaxed">
-            FINACOM structure son offre autour de quatre familles de produits et services,
-            pensées pour répondre à tous les besoins financiers — du particulier à l'entreprise.
+            {text(
+              'intro_body',
+              "FINACOM structure son offre autour de quatre familles de produits et services, pensées pour répondre à tous les besoins financiers — du particulier à l'entreprise."
+            )}
           </p>
         </RevealOnScroll>
 
@@ -457,16 +461,16 @@ const PROCESS_STEPS = [
 ];
 
 function ProcessSection() {
+  const { text } = usePageContent('services');
   return (
     <div className="py-20 lg:py-24 border-t border-gray-100 mt-16">
       <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
         <SectionKicker icon={Clock} label="Comment ça marche" accent="blue" />
         <h3 className="text-3xl lg:text-[2.25rem] font-extrabold text-dark leading-tight">
-          Souscrire à un produit FINACOM, <span className="text-primary-600">en 4 étapes</span>.
+          {text('process_heading', 'Souscrire à un produit FINACOM, en 4 étapes.')}
         </h3>
         <p className="text-gray-500 mt-4 leading-relaxed">
-          De la première question au premier versement — un parcours simple,
-          rapide et accompagné.
+          {text('process_body', 'De la première question au premier versement — un parcours simple, rapide et accompagné.')}
         </p>
       </RevealOnScroll>
 
@@ -530,6 +534,7 @@ const FAQ_ITEMS = [
 ];
 
 function FAQSection() {
+  const { text } = usePageContent('services');
   const [openIdx, setOpenIdx] = useState(0);
 
   return (
@@ -538,7 +543,7 @@ function FAQSection() {
         <RevealOnScroll className="text-center max-w-2xl mx-auto mb-12">
           <SectionKicker icon={HelpCircle} label="Questions fréquentes" accent="accent" />
           <h3 className="text-3xl lg:text-[2.25rem] font-extrabold text-dark leading-tight">
-            Tout ce qu'il faut savoir, <span className="text-accent-600">simplement</span>.
+            {text('faq_heading', 'Tout ce qu\'il faut savoir, simplement.')}
           </h3>
         </RevealOnScroll>
 

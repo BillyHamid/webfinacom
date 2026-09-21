@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { RevealOnScroll, StaggerChildren } from '../hooks/useScrollReveal';
 import SectionKicker from './SectionKicker';
+import { usePageContent } from '../hooks/usePageContent';
 
 // ─── Valeurs ────────────────────────────────────────────────────────
 const VALUES = [
@@ -143,6 +144,7 @@ const GOVERNANCE_LAYERS = [
 ];
 
 export default function About() {
+  const { text } = usePageContent('about');
   return (
     <section id="about" className="bg-gray-50 relative overflow-hidden">
       {/* Décoration globale */}
@@ -158,13 +160,13 @@ export default function About() {
           <RevealOnScroll className="text-center max-w-3xl mx-auto mb-14">
             <SectionKicker icon={Target} label="Notre mission" accent="accent" />
             <h2 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark mb-5 leading-tight">
-              Améliorer les conditions de vie par une{' '}
-              <span className="text-primary-600">finance utile</span>.
+              {text('mission_heading', 'Améliorer les conditions de vie par une finance utile.')}
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed">
-              FINACOM contribue à améliorer les conditions de vie de ses clients et usagers —
-              urbains comme ruraux — à travers une offre rentable et pérenne de produits et
-              services financiers souples, modernes et accessibles à tous.
+              {text(
+                'mission_body',
+                'FINACOM contribue à améliorer les conditions de vie de ses clients et usagers — urbains comme ruraux — à travers une offre rentable et pérenne de produits et services financiers souples, modernes et accessibles à tous.'
+              )}
             </p>
           </RevealOnScroll>
 
@@ -233,8 +235,7 @@ export default function About() {
                     strokeWidth={2.5}
                   />
                   <p className="text-lg sm:text-xl text-dark font-semibold italic leading-snug">
-                    Une institution de microfinance moderne au service du
-                    développement.
+                    {text('mission_quote', 'Une institution de microfinance moderne au service du développement.')}
                   </p>
                   <div className="mt-4 pt-4 border-t border-gray-100 text-xs uppercase tracking-[0.2em] font-bold text-gray-400">
                     Slogan officiel FINACOM
@@ -252,14 +253,13 @@ export default function About() {
                         Ancrage institutionnel
                       </div>
                       <h4 className="text-base font-extrabold mb-2">
-                        Branche financière de la FEME
+                        {text('mission_ancrage_heading', 'Branche financière de la FEME')}
                       </h4>
                       <p className="text-sm text-white/75 leading-relaxed">
-                        FINACOM est une <strong className="text-white">association</strong>{' '}
-                        ayant pour objet la collecte de l'épargne et l'octroi de crédit.
-                        Sa structure mère est l'<strong className="text-white">ODE</strong>,
-                        ONG de développement créée en 1972 par la{' '}
-                        <strong className="text-white">FEME</strong>.
+                        {text(
+                          'mission_ancrage_body',
+                          "FINACOM est une association ayant pour objet la collecte de l'épargne et l'octroi de crédit. Sa structure mère est l'ODE, ONG de développement créée en 1972 par la FEME."
+                        )}
                       </p>
                     </div>
                   </div>
@@ -278,11 +278,13 @@ export default function About() {
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-16">
             <SectionKicker icon={BookOpen} label="Notre histoire" accent="primary" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
-              <span className="text-gradient-green">Cinquante ans</span> au service du développement.
+              {text('history_heading', 'Cinquante ans au service du développement.')}
             </h3>
             <p className="text-gray-600 mt-4 leading-relaxed">
-              De la création de l'ODE en 1972 à FINACOM aujourd'hui — un demi-siècle
-              d'engagement au cœur des communautés burkinabè.
+              {text(
+                'history_body',
+                "De la création de l'ODE en 1972 à FINACOM aujourd'hui — un demi-siècle d'engagement au cœur des communautés burkinabè."
+              )}
             </p>
           </RevealOnScroll>
 
@@ -334,15 +336,15 @@ export default function About() {
               strokeWidth={1.5}
             />
             <blockquote className="text-2xl sm:text-3xl lg:text-[2rem] font-bold text-dark leading-tight mb-8 tracking-tight max-w-4xl mx-auto">
-              "Notre mission dépasse la microfinance.
-              Nous portons l'espoir d'une autonomie financière digne pour chaque
-              foyer burkinabè — qu'il vienne du marché de Ouagadougou, des plaines
-              de Koudougou ou de la diaspora."
+              "{text(
+                'leader_quote',
+                "Notre mission dépasse la microfinance. Nous portons l'espoir d'une autonomie financière digne pour chaque foyer burkinabè — qu'il vienne du marché de Ouagadougou, des plaines de Koudougou ou de la diaspora."
+              )}"
             </blockquote>
             <div className="flex items-center justify-center gap-3">
               <div className="w-12 h-px bg-accent-400" />
               <div className="text-sm text-gray-600">
-                <div className="font-bold text-dark">Direction Générale FINACOM</div>
+                <div className="font-bold text-dark">{text('leader_name', 'Direction Générale FINACOM')}</div>
                 <div className="text-xs text-gray-500 uppercase tracking-wider mt-0.5">
                   Mot d'orientation
                 </div>
@@ -361,11 +363,13 @@ export default function About() {
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
             <SectionKicker icon={Heart} label="Nos valeurs" accent="accent" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
-              Trois principes qui guident <span className="text-accent-600">chacun de nos actes</span>.
+              {text('values_heading', 'Trois principes qui guident chacun de nos actes.')}
             </h3>
             <p className="text-gray-600 mt-4 leading-relaxed">
-              Notre engagement chrétien et notre vocation sociale convergent vers
-              une finance pensée pour servir, pas pour exploiter.
+              {text(
+                'values_body',
+                'Notre engagement chrétien et notre vocation sociale convergent vers une finance pensée pour servir, pas pour exploiter.'
+              )}
             </p>
           </RevealOnScroll>
 
@@ -414,11 +418,13 @@ export default function About() {
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
             <SectionKicker icon={Network} label="Notre structure" accent="primary" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
-              Une <span className="text-primary-600">gouvernance ancrée</span> et claire.
+              {text('governance_heading', 'Une gouvernance ancrée et claire.')}
             </h3>
             <p className="text-gray-600 mt-4 leading-relaxed">
-              FINACOM s'inscrit dans une lignée institutionnelle solide qui garantit
-              sa mission et ses valeurs.
+              {text(
+                'governance_body',
+                "FINACOM s'inscrit dans une lignée institutionnelle solide qui garantit sa mission et ses valeurs."
+              )}
             </p>
           </RevealOnScroll>
 
@@ -530,7 +536,7 @@ export default function About() {
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
             <SectionKicker icon={Target} label="Axes stratégiques" accent="primary" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
-              Trois priorités pour <span className="text-primary-600">2024–2028</span>.
+              {text('axes_heading', 'Trois priorités pour 2024–2028.')}
             </h3>
           </RevealOnScroll>
 
@@ -593,11 +599,10 @@ export default function About() {
           <RevealOnScroll className="text-center max-w-2xl mx-auto mb-14">
             <SectionKicker icon={MapPin} label="Zones d'intervention" accent="accent" />
             <h3 className="text-3xl lg:text-[2.5rem] font-extrabold text-dark leading-tight">
-              Présents au cœur des <span className="text-accent-600">communautés</span>.
+              {text('regions_heading', 'Présents au cœur des communautés.')}
             </h3>
             <p className="text-gray-600 mt-4 leading-relaxed">
-              <strong className="text-dark">8 agences</strong> interconnectées au Burkina Faso
-              — vous trouvez toujours FINACOM près de chez vous.
+              {text('regions_body', '8 agences interconnectées au Burkina Faso — vous trouvez toujours FINACOM près de chez vous.')}
             </p>
           </RevealOnScroll>
 
@@ -716,11 +721,13 @@ export default function About() {
           <RevealOnScroll>
             <Award size={40} className="text-accent-500 mx-auto mb-6" />
             <h3 className="text-2xl lg:text-3xl font-extrabold text-dark mb-4 leading-tight">
-              Prêt à faire grandir vos projets avec FINACOM ?
+              {text('cta_heading', 'Prêt à faire grandir vos projets avec FINACOM ?')}
             </h3>
             <p className="text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto">
-              Découvrez notre gamme complète de produits et services — épargne,
-              crédit, mobile banking — et trouvez la solution adaptée à votre vie.
+              {text(
+                'cta_body',
+                'Découvrez notre gamme complète de produits et services — épargne, crédit, mobile banking — et trouvez la solution adaptée à votre vie.'
+              )}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a

@@ -11,6 +11,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
+import { usePageContent } from '../hooks/usePageContent';
 
 // ─── 8 Agences FINACOM (issues du brief) ────────────────────────────
 const AGENCIES = [
@@ -76,6 +77,7 @@ const AGENCIES = [
 ];
 
 export default function Contact() {
+  const { text } = usePageContent('contact');
   const [activeAgency, setActiveAgency] = useState(AGENCIES[0]);
 
   return (
@@ -92,12 +94,13 @@ export default function Contact() {
             Nos agences
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
-            Une agence FINACOM <span className="text-gradient-green">près de chez vous</span>.
+            {text('info_heading', 'Une agence FINACOM près de chez vous.')}
           </h2>
           <p className="text-gray-500 text-base sm:text-lg leading-relaxed">
-            Retrouvez-nous dans <strong className="text-dark">8 agences</strong> entièrement
-            interconnectées — à Ouagadougou et à Koudougou — pour effectuer vos opérations
-            dans tout le réseau FINACOM.
+            {text(
+              'info_body',
+              'Retrouvez-nous dans 8 agences entièrement interconnectées — à Ouagadougou et à Koudougou — pour effectuer vos opérations dans tout le réseau FINACOM.'
+            )}
           </p>
         </RevealOnScroll>
 
@@ -219,7 +222,7 @@ export default function Contact() {
                 Le réseau FINACOM
               </div>
               <h3 className="text-2xl lg:text-3xl font-extrabold text-dark leading-tight">
-                <span className="text-primary-600">8 agences</span> entièrement interconnectées.
+                {text('network_heading', '8 agences entièrement interconnectées.')}
               </h3>
             </div>
             <div className="hidden sm:flex items-center gap-2 text-xs text-gray-400">

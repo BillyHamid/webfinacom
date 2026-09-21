@@ -1,9 +1,11 @@
 import { Calendar, ArrowRight, Clock } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
 import { useSupabaseTable } from '../hooks/useSupabaseTable';
+import { usePageContent } from '../hooks/usePageContent';
 import Loader from './Loader';
 
 export default function News() {
+  const { text } = usePageContent('blog');
   const { data: articles, loading } = useSupabaseTable('articles', {
     eq: { status: 'published' },
     orderBy: 'created_at',
@@ -34,8 +36,7 @@ export default function News() {
                 Actualités
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-dark leading-tight tracking-tight">
-                Dernières{' '}
-                <span className="text-gradient-green">nouvelles</span>
+                {text('news_heading', 'Dernières nouvelles')}
               </h2>
             </div>
             <a href="/blog" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 font-semibold hover:border-primary-300 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300">

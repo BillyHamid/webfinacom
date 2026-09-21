@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { RevealOnScroll } from '../hooks/useScrollReveal';
 import { useSupabaseTable } from '../hooks/useSupabaseTable';
+import { usePageContent } from '../hooks/usePageContent';
 import Loader from './Loader';
 
 const CATEGORY_META = {
@@ -71,6 +72,7 @@ function mapRow(row) {
 }
 
 export default function Media() {
+  const { text } = usePageContent('media');
   const [activeId, setActiveId] = useState('videos');
   const { data, loading } = useSupabaseTable('media_items', {
     orderBy: 'published_at',
@@ -111,11 +113,13 @@ export default function Media() {
             Médiathèque
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-dark mb-5 leading-tight tracking-tight">
-            Explorez l'univers <span className="text-gradient-green">FINACOM</span> en images.
+            {text('media_heading', "Explorez l'univers FINACOM en images.")}
           </h2>
           <p className="text-gray-500 text-base sm:text-lg leading-relaxed">
-            Vidéos institutionnelles, reportages photos et documents officiels — toutes
-            les ressources pour mieux connaître FINACOM et ses produits.
+            {text(
+              'media_body',
+              'Vidéos institutionnelles, reportages photos et documents officiels — toutes les ressources pour mieux connaître FINACOM et ses produits.'
+            )}
           </p>
         </RevealOnScroll>
 
