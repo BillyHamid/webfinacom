@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const NAV_LINKS = [
   { label: 'Accueil', to: '/' },
@@ -12,6 +13,7 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
+  const { general } = useSiteSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
@@ -51,8 +53,8 @@ export default function Navbar() {
             >
               <div className="relative">
                 <img
-                  src="/logo-finacom-removebg-preview.png"
-                  alt="FINACOM"
+                  src={general.logo_url}
+                  alt={general.site_name}
                   className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
@@ -62,7 +64,7 @@ export default function Navbar() {
                     scrolled ? 'text-primary-700' : 'text-white'
                   }`}
                 >
-                  FINACOM
+                  {general.site_name}
                 </span>
                 <span
                   className={`block text-[9px] uppercase tracking-[0.25em] -mt-0.5 font-medium transition-colors duration-300 ${

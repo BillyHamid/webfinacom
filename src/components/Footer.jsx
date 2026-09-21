@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail } from 'lucide-react';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 // ─── Réseaux sociaux (icônes inline pour éviter d'ajouter une dépendance) ──
 const FacebookIcon = () => (
@@ -49,6 +50,9 @@ const SOCIAL = [
 ];
 
 export default function Footer() {
+  const { general } = useSiteSettings();
+  const phoneHref = `tel:${general.phone.replace(/[^+\d]/g, '')}`;
+
   return (
     <footer className="bg-dark text-white">
       {/* Bandeau supérieur (séparateur subtil) */}
@@ -61,12 +65,12 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-4">
             <Link to="/" className="inline-flex items-center gap-3 mb-4 group">
               <img
-                src="/logo-finacom-removebg-preview.png"
-                alt="FINACOM"
+                src={general.logo_url}
+                alt={general.site_name}
                 className="h-10 w-auto transition-transform group-hover:scale-105"
               />
               <div>
-                <div className="text-base font-extrabold tracking-tight">FINACOM</div>
+                <div className="text-base font-extrabold tracking-tight">{general.site_name}</div>
                 <div className="text-[9px] uppercase tracking-[0.25em] text-accent-400 font-medium -mt-0.5">
                   Finance Communautaire
                 </div>
@@ -74,32 +78,31 @@ export default function Footer() {
             </Link>
 
             <p className="text-white/50 text-sm leading-relaxed mb-5 max-w-sm">
-              Institution de microfinance moderne, agréée BCEAO. Branche financière
-              de la FEME, au service du développement burkinabè.
+              {general.description}
             </p>
 
             {/* Coordonnées compactes */}
             <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2.5 text-white/60">
                 <MapPin size={14} className="text-accent-400 mt-0.5 flex-shrink-0" />
-                <span>01 BP 1234 Ouagadougou 01, Burkina Faso</span>
+                <span>{general.address}</span>
               </li>
               <li>
                 <a
-                  href="tel:+22625000000"
+                  href={phoneHref}
                   className="flex items-center gap-2.5 text-white/60 hover:text-white transition-colors"
                 >
                   <Phone size={14} className="text-accent-400 flex-shrink-0" />
-                  +226 25 00 00 00
+                  {general.phone}
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:contact@finacom.bf"
+                  href={`mailto:${general.email}`}
                   className="flex items-center gap-2.5 text-white/60 hover:text-white transition-colors"
                 >
                   <Mail size={14} className="text-accent-400 flex-shrink-0" />
-                  contact@finacom.bf
+                  {general.email}
                 </a>
               </li>
             </ul>
@@ -168,7 +171,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-white/40">
-            © {new Date().getFullYear()} <span className="text-white/70 font-semibold">FINACOM</span> · Tous droits réservés
+            © {new Date().getFullYear()} <span className="text-white/70 font-semibold">{general.site_name}</span> · Tous droits réservés
           </p>
 
           <div className="flex items-center gap-2">

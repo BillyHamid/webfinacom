@@ -8,6 +8,15 @@ import {
 import { supabase } from '../../lib/supabaseClient';
 import { useSupabaseTable } from '../../hooks/useSupabaseTable';
 import { uploadFile } from '../../lib/uploadFile';
+import { compressImage } from '../../lib/compressImage';
+
+const UPLOAD_TIMEOUT_MS = 45000; // ne reste jamais bloqué sur "Envoi..." indéfiniment
+function withTimeout(promise, ms, message) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms)),
+  ]);
+}
 
 const tabs = [
   { id: 'general', label: 'Général', icon: Globe },
@@ -49,10 +58,15 @@ export default function SettingsPage() {
     if (!file) return;
     setUploadingLogo(true);
     try {
-      const url = await uploadFile(file, 'settings');
+      const compressed = await compressImage(file, { maxWidth: 600 });
+      const url = await withTimeout(
+        uploadFile(compressed, 'settings'),
+        UPLOAD_TIMEOUT_MS,
+        "L'envoi prend trop de temps (connexion lente ?). Réessaie."
+      );
       setGeneral((g) => ({ ...g, logo_url: url }));
     } catch (err) {
-      alert(`Échec de l'upload : ${err.message}`);
+      alert(`Échec de l'upload : ${err.message || 'erreur inconnue — vérifie ta connexion et réessaie.'}`);
     } finally {
       setUploadingLogo(false);
     }
