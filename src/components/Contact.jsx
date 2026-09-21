@@ -325,7 +325,7 @@ export default function Contact() {
                   Standard
                 </div>
                 <div className="text-sm font-bold text-dark">Service clientèle</div>
-                <div className="text-xs text-gray-500 mt-1">Du lundi au vendredi, 8h–17h</div>
+                <div className="text-xs text-gray-500 mt-1">Du lundi au vendredi, 7h30–16h</div>
               </div>
             </div>
             <div className="flex items-start gap-4 p-5 rounded-2xl bg-gray-50 border border-gray-100">
