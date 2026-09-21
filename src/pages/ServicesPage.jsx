@@ -18,7 +18,10 @@ export default function ServicesPage() {
           'Découvrez nos solutions d\'épargne, nos produits de crédit et nos services digitaux — pensés pour répondre à tous les besoins financiers.'
         )}
         breadcrumb="Nos produits et services"
-        images={['/hero-services.jpg', '/hero-services-2.jpg']}
+        images={[
+          text('hero_image_1', '/hero-services.jpg'),
+          text('hero_image_2', '/hero-services-2.jpg'),
+        ].filter(Boolean)}
       />
       <Services />
       <Footer />

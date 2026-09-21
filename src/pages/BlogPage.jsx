@@ -19,7 +19,7 @@ export default function BlogPage() {
           'Suivez nos dernières actualités, nos événements et toute la vie du réseau FINACOM — au cœur des communautés burkinabè.'
         )}
         breadcrumb="Blog"
-        imageUrl="/hero-blog.jpg"
+        images={[text('hero_image_1', '/hero-blog.jpg'), text('hero_image_2', '')].filter(Boolean)}
       />
       <News />
       <Events />

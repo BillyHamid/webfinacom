@@ -18,7 +18,7 @@ export default function ContactPage() {
           'Retrouvez-nous dans nos 8 agences entièrement interconnectées — à Ouagadougou et à Koudougou — pour effectuer vos opérations partout dans le réseau.'
         )}
         breadcrumb="Contact"
-        imageUrl="/hero-contact.jpg"
+        images={[text('hero_image_1', '/hero-contact.jpg'), text('hero_image_2', '')].filter(Boolean)}
       />
       <Contact />
       <Footer />

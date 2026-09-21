@@ -1,8 +1,9 @@
 import TopBar from '../components/TopBar';
 import { useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Save, Sparkles, Info } from 'lucide-react';
+import { Save, Sparkles, Info, Image as ImageIcon, Loader2, X } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
+import { uploadFile } from '../../lib/uploadFile';
 import { PAGE_CONTENT_SCHEMA } from '../../lib/pageContentSchema';
 
 export default function PageContentManager() {
@@ -13,6 +14,7 @@ export default function PageContentManager() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [loadError, setLoadError] = useState(null);
+  const [uploadingKey, setUploadingKey] = useState(null);
 
   const activeSchema = PAGE_CONTENT_SCHEMA.find((p) => p.page === activePage);
 
@@ -38,6 +40,19 @@ export default function PageContentManager() {
   }, [activePage]);
 
   const setField = (key, value) => setValues((v) => ({ ...v, [key]: value }));
+
+  const handleImageChange = async (key, file) => {
+    if (!file) return;
+    setUploadingKey(key);
+    try {
+      const url = await uploadFile(file, `pages/${activePage}`);
+      setField(key, url);
+    } catch (err) {
+      alert(`Échec de l'envoi de l'image : ${err.message}`);
+    } finally {
+      setUploadingKey(null);
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -111,20 +126,56 @@ export default function PageContentManager() {
                       <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                         {f.label}
                       </label>
-                      {f.type === 'textarea' ? (
+                      {f.type === 'textarea' && (
                         <textarea
                           rows={3}
                           value={values[f.key] || ''}
                           onChange={(e) => setField(f.key, e.target.value)}
                           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 resize-none transition-colors"
                         />
-                      ) : (
+                      )}
+                      {f.type === 'input' && (
                         <input
                           type="text"
                           value={values[f.key] || ''}
                           onChange={(e) => setField(f.key, e.target.value)}
                           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-400 transition-colors"
                         />
+                      )}
+                      {f.type === 'image' && (
+                        <div className="flex items-center gap-4">
+                          <div className="w-28 h-20 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {values[f.key] ? (
+                              <img src={values[f.key]} alt="" className="w-full h-full object-cover" />
+                            ) : (
+                              <ImageIcon size={20} className="text-gray-300" />
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <label className="px-4 py-2 text-sm bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors font-medium cursor-pointer">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                disabled={uploadingKey === f.key}
+                                onChange={(e) => handleImageChange(f.key, e.target.files?.[0])}
+                              />
+                              {uploadingKey === f.key ? (
+                                <span className="flex items-center gap-1.5"><Loader2 size={14} className="animate-spin" /> Envoi...</span>
+                              ) : values[f.key] ? 'Changer la photo' : 'Choisir une photo'}
+                            </label>
+                            {values[f.key] && (
+                              <button
+                                type="button"
+                                onClick={() => setField(f.key, '')}
+                                className="p-2 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+                                title="Retirer"
+                              >
+                                <X size={15} />
+                              </button>
+                            )}
+                          </div>
+                        </div>
                       )}
                     </div>
                   ))}

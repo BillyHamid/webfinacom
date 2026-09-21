@@ -19,7 +19,10 @@ export default function AboutPage() {
           "Découvrez l'histoire, la mission et les valeurs qui guident l'engagement de FINACOM auprès des communautés burkinabè."
         )}
         breadcrumb="À propos"
-        images={['/about-hero-team.jpg', '/hero-about-2.jpg']}
+        images={[
+          text('hero_image_1', '/about-hero-team.jpg'),
+          text('hero_image_2', '/hero-about-2.jpg'),
+        ].filter(Boolean)}
       />
       <About />
 

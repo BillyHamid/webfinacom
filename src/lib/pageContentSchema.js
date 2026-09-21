@@ -11,8 +11,9 @@ export const PAGE_CONTENT_SCHEMA = [
     sections: [
       {
         title: 'Hero (bandeau principal)',
-        note: "Le grand titre animé (\"Faire grandir vos projets, ensemble.\") n'est pas éditable ici — seuls le petit label, le texte d'accompagnement et la citation le sont.",
+        note: "Le grand titre animé (\"Faire grandir vos projets, ensemble.\") n'est pas éditable ici — seuls le petit label, le texte d'accompagnement, la citation et la photo de fond le sont.",
         fields: [
+          { key: 'hero_image_1', label: 'Photo de fond', type: 'image' },
           { key: 'hero_kicker', label: 'Petit label au-dessus du titre', type: 'input' },
           { key: 'hero_body', label: 'Paragraphe sous le titre', type: 'textarea' },
           { key: 'hero_quote', label: 'Citation (encart latéral)', type: 'textarea' },
@@ -61,7 +62,10 @@ export const PAGE_CONTENT_SCHEMA = [
     sections: [
       {
         title: 'Hero (bandeau principal)',
+        note: "2 photos = carrousel en fondu enchaîné. Laisse la 2e vide pour une seule photo fixe.",
         fields: [
+          { key: 'hero_image_1', label: 'Photo de fond (1ère)', type: 'image' },
+          { key: 'hero_image_2', label: 'Photo de fond (2e, carrousel)', type: 'image' },
           { key: 'hero_kicker', label: 'Petit label', type: 'input' },
           { key: 'hero_title', label: 'Titre (partie normale)', type: 'input' },
           { key: 'hero_highlight', label: 'Titre (partie dorée)', type: 'input' },
@@ -132,7 +136,10 @@ export const PAGE_CONTENT_SCHEMA = [
     sections: [
       {
         title: 'Hero (bandeau principal)',
+        note: "2 photos = carrousel en fondu enchaîné. Laisse la 2e vide pour une seule photo fixe.",
         fields: [
+          { key: 'hero_image_1', label: 'Photo de fond (1ère)', type: 'image' },
+          { key: 'hero_image_2', label: 'Photo de fond (2e, carrousel)', type: 'image' },
           { key: 'hero_kicker', label: 'Petit label', type: 'input' },
           { key: 'hero_title', label: 'Titre (partie normale)', type: 'input' },
           { key: 'hero_highlight', label: 'Titre (partie dorée)', type: 'input' },
@@ -165,7 +172,10 @@ export const PAGE_CONTENT_SCHEMA = [
     sections: [
       {
         title: 'Hero (bandeau principal)',
+        note: "Ajoute une 2e photo pour activer un carrousel en fondu enchaîné (optionnel).",
         fields: [
+          { key: 'hero_image_1', label: 'Photo de fond (1ère)', type: 'image' },
+          { key: 'hero_image_2', label: 'Photo de fond (2e, carrousel — optionnel)', type: 'image' },
           { key: 'hero_kicker', label: 'Petit label', type: 'input' },
           { key: 'hero_title', label: 'Titre (partie normale)', type: 'input' },
           { key: 'hero_highlight', label: 'Titre (partie dorée)', type: 'input' },
@@ -184,7 +194,10 @@ export const PAGE_CONTENT_SCHEMA = [
     sections: [
       {
         title: 'Hero (bandeau principal)',
+        note: "Ajoute une 2e photo pour activer un carrousel en fondu enchaîné (optionnel).",
         fields: [
+          { key: 'hero_image_1', label: 'Photo de fond (1ère)', type: 'image' },
+          { key: 'hero_image_2', label: 'Photo de fond (2e, carrousel — optionnel)', type: 'image' },
           { key: 'hero_kicker', label: 'Petit label', type: 'input' },
           { key: 'hero_title', label: 'Titre (partie normale)', type: 'input' },
           { key: 'hero_highlight', label: 'Titre (partie dorée)', type: 'input' },
@@ -206,7 +219,10 @@ export const PAGE_CONTENT_SCHEMA = [
     sections: [
       {
         title: 'Hero (bandeau principal)',
+        note: "Ajoute une 2e photo pour activer un carrousel en fondu enchaîné (optionnel).",
         fields: [
+          { key: 'hero_image_1', label: 'Photo de fond (1ère)', type: 'image' },
+          { key: 'hero_image_2', label: 'Photo de fond (2e, carrousel — optionnel)', type: 'image' },
           { key: 'hero_kicker', label: 'Petit label', type: 'input' },
           { key: 'hero_title', label: 'Titre (partie normale)', type: 'input' },
           { key: 'hero_highlight', label: 'Titre (partie dorée)', type: 'input' },

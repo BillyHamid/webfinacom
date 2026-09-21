@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { usePageContent } from '../hooks/usePageContent';
 
-const HERO_IMAGE = '/hero-about.jpg';
+const DEFAULT_HERO_IMAGE = '/hero-about.jpg';
 
 // Mots rotatifs animés (identique à Hero 1)
 const ROTATING_WORDS = ['projets,', 'rêves,', 'ambitions,', 'commerces,'];
@@ -36,7 +36,7 @@ export default function HeroEditorial() {
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-700 via-primary-800 to-primary-900" />
         <img
-          src={HERO_IMAGE}
+          src={text('hero_image_1', DEFAULT_HERO_IMAGE)}
           alt=""
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover"
