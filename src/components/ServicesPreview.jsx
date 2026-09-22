@@ -58,9 +58,7 @@ const CATEGORIES = [
     name: 'Services rattachés',
     count: 6,
     examples: 'Virements · Attestations · Cautions',
-    // Échange client-conseiller au guichet = services en agence
-    image:
-      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=80',
+    image: '/service-rattaches.jpg',
     accent: 'emerald',
     accentRgb: 'rgba(16,185,129,',
   },
