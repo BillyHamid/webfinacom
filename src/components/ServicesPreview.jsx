@@ -107,11 +107,11 @@ export default function ServicesPreview() {
                 {/* Fallback gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-700 to-primary-900" />
 
-                {/* Photo background */}
+                {/* Photo background — image entière visible (pas de recadrage) */}
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                  className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 transition-transform duration-1000"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
