@@ -53,9 +53,20 @@ export default function Testimonials() {
               <Quote size={48} className="absolute top-8 right-8 text-primary-100" />
 
               <div className="flex items-center gap-4 mb-8">
-                <div className={`w-14 h-14 rounded-2xl ${current.color} flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
-                  {current.initials}
-                </div>
+                {current.photo_url ? (
+                  <img
+                    src={current.photo_url}
+                    alt={current.name}
+                    className="w-14 h-14 rounded-2xl object-cover shadow-lg flex-shrink-0"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className={`w-14 h-14 rounded-2xl ${current.color} flex items-center justify-center text-white font-bold text-lg shadow-lg flex-shrink-0`}>
+                    {current.initials}
+                  </div>
+                )}
                 <div>
                   <div className="font-bold text-dark text-lg">{current.name}</div>
                   <div className="text-sm text-gray-400">{current.role}</div>

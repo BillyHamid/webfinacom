@@ -20,6 +20,7 @@ export default function TestimonialsManager() {
         { key: 'role', label: 'Rôle / Ville', type: 'text' },
         { key: 'content', label: 'Témoignage', type: 'textarea', required: true },
         { key: 'rating', label: 'Note (1 à 5)', type: 'number', default: 5 },
+        { key: 'photo_url', label: 'Photo (optionnel — sinon les initiales sont affichées)', type: 'image' },
         { key: 'initials', label: 'Initiales', type: 'text' },
         { key: 'color', label: 'Couleur', type: 'select', options: COLOR_OPTIONS, default: COLOR_OPTIONS[0].value },
         { key: 'sort_order', label: 'Ordre d\'affichage', type: 'number', default: 0 },

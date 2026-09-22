@@ -4,6 +4,15 @@ import TopBar from './TopBar';
 import { useOutletContext } from 'react-router-dom';
 import { useSupabaseTable } from '../../hooks/useSupabaseTable';
 import { uploadFile } from '../../lib/uploadFile';
+import { compressImage } from '../../lib/compressImage';
+
+const UPLOAD_TIMEOUT_MS = 45000; // ne reste jamais bloqué sur "Envoi..." indéfiniment
+function withTimeout(promise, ms, message) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms)),
+  ]);
+}
 
 /**
  * Gestionnaire CRUD générique pour les contenus "marketing" homogènes
@@ -45,10 +54,15 @@ export default function GenericCollectionManager({ table, title, subtitle, order
     if (!file) return;
     setUploadingKey(key);
     try {
-      const url = await uploadFile(file, table);
+      const compressed = await compressImage(file);
+      const url = await withTimeout(
+        uploadFile(compressed, table),
+        UPLOAD_TIMEOUT_MS,
+        "L'envoi prend trop de temps (connexion lente ?). Réessaie."
+      );
       setForm((f) => ({ ...f, [key]: url }));
     } catch (err) {
-      alert(`Échec de l'upload : ${err.message}`);
+      alert(`Échec de l'upload : ${err.message || 'erreur inconnue — vérifie ta connexion et réessaie.'}`);
     } finally {
       setUploadingKey(null);
     }
