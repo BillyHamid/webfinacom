@@ -22,6 +22,7 @@ export default function AboutPage() {
         images={[
           text('hero_image_1', '/about-hero-team.jpg'),
           text('hero_image_2', '/hero-about-2.jpg'),
+          text('hero_image_3', ''),
         ].filter(Boolean)}
       />
       <About />

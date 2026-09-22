@@ -18,7 +18,11 @@ export default function MediaPage() {
           'Vidéos institutionnelles, reportages photos et documents officiels — toutes les ressources pour mieux connaître FINACOM.'
         )}
         breadcrumb="Médiathèque"
-        images={[text('hero_image_1', '/hero-media.jpg'), text('hero_image_2', '')].filter(Boolean)}
+        images={[
+          text('hero_image_1', '/hero-media.jpg'),
+          text('hero_image_2', ''),
+          text('hero_image_3', ''),
+        ].filter(Boolean)}
       />
       <Media />
       <Footer />

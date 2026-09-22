@@ -13,6 +13,13 @@ export default function HeroEditorial() {
   const [loaded, setLoaded] = useState(false);
   const [wordIdx, setWordIdx] = useState(0);
 
+  const slides = [
+    text('hero_image_1', DEFAULT_HERO_IMAGE),
+    text('hero_image_2', ''),
+    text('hero_image_3', ''),
+  ].filter(Boolean);
+  const [activeSlide, setActiveSlide] = useState(0);
+
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 50);
     return () => clearTimeout(t);
@@ -27,27 +34,44 @@ export default function HeroEditorial() {
     return () => clearInterval(t);
   }, []);
 
+  // Carrousel des photos de fond (si plusieurs) — le minuteur redémarre à
+  // chaque changement de slide, y compris un clic manuel sur une puce.
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const t = setTimeout(() => {
+      setActiveSlide((i) => (i + 1) % slides.length);
+    }, 5000);
+    return () => clearTimeout(t);
+  }, [slides.length, activeSlide]);
+
   return (
     <section
       id="hero"
       className="relative min-h-screen overflow-hidden bg-primary-900 flex items-center"
     >
-      {/* ── Photo de fond avec Ken Burns ── */}
+      {/* ── Photo(s) de fond avec Ken Burns / fondu enchaîné ── */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-700 via-primary-800 to-primary-900" />
-        <img
-          src={text('hero_image_1', DEFAULT_HERO_IMAGE)}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            transform: loaded ? 'scale(1.08)' : 'scale(1.02)',
-            transition: 'transform 20000ms cubic-bezier(0.22, 1, 0.36, 1)',
-          }}
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
+        {slides.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            loading={i === 0 ? 'eager' : 'lazy'}
+            style={{
+              opacity: i === activeSlide ? 1 : 0,
+              transform: loaded ? 'scale(1.08)' : 'scale(1.02)',
+              transitionProperty: 'opacity, transform',
+              transitionDuration: '1200ms, 20000ms',
+              transitionTimingFunction: 'ease-in-out, cubic-bezier(0.22, 1, 0.36, 1)',
+            }}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        ))}
 
         {/* Voiles sombres pour la lisibilité — pas teintés vert */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/10" />
@@ -61,6 +85,23 @@ export default function HeroEditorial() {
               'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.5) 100%)',
           }}
         />
+
+        {/* Puces de navigation du carrousel */}
+        {slides.length > 1 && (
+          <div className="absolute bottom-8 left-4 sm:left-6 lg:left-12 z-10 flex gap-2">
+            {slides.map((src, i) => (
+              <button
+                key={src}
+                type="button"
+                aria-label={`Afficher la photo ${i + 1}`}
+                onClick={() => setActiveSlide(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === activeSlide ? 'w-6 bg-accent-400' : 'w-1.5 bg-white/40 hover:bg-white/60'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Accent vertical doré à gauche ── */}

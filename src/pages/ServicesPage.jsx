@@ -21,6 +21,7 @@ export default function ServicesPage() {
         images={[
           text('hero_image_1', '/hero-services.jpg'),
           text('hero_image_2', '/hero-services-2.jpg'),
+          text('hero_image_3', ''),
         ].filter(Boolean)}
       />
       <Services />
