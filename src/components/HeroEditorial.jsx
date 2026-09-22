@@ -3,9 +3,7 @@ import { ArrowRight, ChevronDown } from 'lucide-react';
 import { usePageContent } from '../hooks/usePageContent';
 
 const DEFAULT_HERO_IMAGE = '/hero-about.jpg';
-
-// Mots rotatifs animés (identique à Hero 1)
-const ROTATING_WORDS = ['projets,', 'rêves,', 'ambitions,', 'commerces,'];
+const DEFAULT_TITLE_WORDS = 'projets, rêves, ambitions, commerces';
 const WORD_DURATION = 2800; // ms
 
 export default function HeroEditorial() {
@@ -20,6 +18,14 @@ export default function HeroEditorial() {
   ].filter(Boolean);
   const [activeSlide, setActiveSlide] = useState(0);
 
+  // Mots rotatifs animés dans le titre — éditables (séparés par des
+  // virgules dans l'admin), une virgule finale est ajoutée à l'affichage.
+  const rotatingWords = text('hero_title_words', DEFAULT_TITLE_WORDS)
+    .split(',')
+    .map((w) => w.trim())
+    .filter(Boolean)
+    .map((w) => `${w},`);
+
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 50);
     return () => clearTimeout(t);
@@ -27,12 +33,13 @@ export default function HeroEditorial() {
 
   // Rotation des mots dans le titre
   useEffect(() => {
+    if (rotatingWords.length < 2) return;
     const t = setInterval(
-      () => setWordIdx((i) => (i + 1) % ROTATING_WORDS.length),
+      () => setWordIdx((i) => (i + 1) % rotatingWords.length),
       WORD_DURATION
     );
     return () => clearInterval(t);
-  }, []);
+  }, [rotatingWords.length]);
 
   // Carrousel des photos de fond (si plusieurs) — le minuteur redémarre à
   // chaque changement de slide, y compris un clic manuel sur une puce.
@@ -146,7 +153,7 @@ export default function HeroEditorial() {
                     'transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 600ms, opacity 700ms ease-out 600ms',
                 }}
               >
-                Faire grandir
+                {text('hero_title_line1', 'Faire grandir')}
               </span>
             </div>
 
@@ -161,7 +168,7 @@ export default function HeroEditorial() {
                     'transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 780ms, opacity 700ms ease-out 780ms',
                 }}
               >
-                vos{' '}
+                {text('hero_title_prefix', 'vos')}{' '}
                 <span
                   className="relative inline-block align-baseline overflow-hidden"
                   style={{
@@ -170,7 +177,7 @@ export default function HeroEditorial() {
                     verticalAlign: 'bottom',
                   }}
                 >
-                  {ROTATING_WORDS.map((w, i) => (
+                  {rotatingWords.map((w, i) => (
                     <span
                       key={w}
                       className="absolute left-0 top-0 whitespace-nowrap"
@@ -212,7 +219,7 @@ export default function HeroEditorial() {
                     }}
                   >
                     <span className="text-[2.75rem] sm:text-[4rem] lg:text-[5.5rem] xl:text-[6.75rem]">
-                      ensemble
+                      {text('hero_title_accent', 'ensemble')}
                     </span>
                   </span>
                   {/* Soulignement doré qui se dessine */}

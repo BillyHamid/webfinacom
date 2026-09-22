@@ -11,12 +11,20 @@ export const PAGE_CONTENT_SCHEMA = [
     sections: [
       {
         title: 'Hero (bandeau principal)',
-        note: "Le grand titre animé (\"Faire grandir vos projets, ensemble.\") n'est pas éditable ici — seuls le petit label, le texte d'accompagnement, la citation et les photos de fond le sont. Jusqu'à 3 photos = carrousel en fondu enchaîné ; laisse les suivantes vides pour moins de photos.",
+        note: "Jusqu'à 3 photos = carrousel en fondu enchaîné ; laisse les suivantes vides pour moins de photos.",
         fields: [
           { key: 'hero_image_1', label: 'Photo de fond (1ère)', type: 'image' },
           { key: 'hero_image_2', label: 'Photo de fond (2e, carrousel — optionnel)', type: 'image' },
           { key: 'hero_image_3', label: 'Photo de fond (3e, carrousel — optionnel)', type: 'image' },
           { key: 'hero_kicker', label: 'Petit label au-dessus du titre', type: 'input' },
+          { key: 'hero_title_line1', label: 'Grand titre — ligne 1', type: 'input' },
+          { key: 'hero_title_prefix', label: 'Grand titre — ligne 2, mot avant la liste (ex. "vos")', type: 'input' },
+          {
+            key: 'hero_title_words',
+            label: 'Grand titre — mots qui défilent (séparés par des virgules)',
+            type: 'input',
+          },
+          { key: 'hero_title_accent', label: 'Grand titre — ligne 3, mot doré final (avant le point)', type: 'input' },
           { key: 'hero_body', label: 'Paragraphe sous le titre', type: 'textarea' },
           { key: 'hero_quote', label: 'Citation (encart latéral)', type: 'textarea' },
         ],
