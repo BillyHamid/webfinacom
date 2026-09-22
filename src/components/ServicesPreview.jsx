@@ -118,7 +118,7 @@ export default function ServicesPreview() {
                 />
 
                 {/* Dégradé sombre pour la lisibilité du texte (bas) */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
                 {/* Voile coloré au hover (selon accent) */}
                 <div
@@ -142,10 +142,10 @@ export default function ServicesPreview() {
                   <span className="text-accent-400">{cat.count} produits</span>
                 </div>
 
-                {/* Icône en haut */}
-                <div className="absolute top-12 right-4 w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center group-hover:bg-accent-500 group-hover:border-accent-500 transition-all duration-500 z-10">
+                {/* Icône en haut — alignée avec le numéro pour rester dans la bande du haut */}
+                <div className="absolute top-3.5 right-4 w-11 h-11 rounded-xl bg-black/25 backdrop-blur-md border border-white/15 flex items-center justify-center group-hover:bg-accent-500 group-hover:border-accent-500 transition-all duration-500 z-10">
                   <Icon
-                    size={24}
+                    size={20}
                     className="text-white group-hover:text-primary-900 transition-colors duration-500"
                   />
                 </div>
