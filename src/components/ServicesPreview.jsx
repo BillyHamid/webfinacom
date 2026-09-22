@@ -23,9 +23,7 @@ const CATEGORIES = [
     name: "Produits d'épargne",
     count: 4,
     examples: 'DAV · DAT · Daar daré',
-    // Bocal de pièces avec plante = épargne qui fructifie
-    image:
-      'https://images.unsplash.com/photo-1633158829875-e5316a358c6f?auto=format&fit=crop&w=1000&q=80',
+    image: '/service-epargne.jpg',
     accent: 'primary',
     accentRgb: 'rgba(27,122,61,',
   },
@@ -36,9 +34,7 @@ const CATEGORIES = [
     name: 'Produits de crédit',
     count: 4,
     examples: 'Commercial · Agricole · Salariés',
-    // Femme africaine récoltant dans un champ = crédit agricole / Malawi
-    image:
-      'https://images.unsplash.com/photo-1746014929708-fcb859fd3185?auto=format&fit=crop&w=1000&q=80',
+    image: '/service-credit.jpg',
     accent: 'accent',
     accentRgb: 'rgba(212,160,23,',
   },
